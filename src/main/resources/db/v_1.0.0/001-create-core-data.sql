@@ -55,7 +55,7 @@ CREATE TABLE game_studios (
     context TEXT,
     creation_date DATE NOT NULL,
     employees_id UUID,
-    creation_game_id UUID
+    creation_game_id UUID,
     CONSTRAINT fk_game_studios_employees FOREIGN KEY (employees_id) REFERENCES clients(id),
     CONSTRAINT fk_game_studios_creation_games FOREIGN KEY (creation_game_id) REFERENCES games(id)
 );
