@@ -1,4 +1,6 @@
 spring:
+  liquibase:
+    enable: false
   application:
     name: game-shop-api
   datasource:
