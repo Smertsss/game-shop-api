@@ -11,7 +11,7 @@ spring:
     password: 111
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
 
 server:
   port: 8080
