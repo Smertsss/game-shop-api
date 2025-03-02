@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: game-shop-api
+  datasource:
+    url: jdbc:postgresql://localhost:5432/game-shop-api
+    username: ideal
+    password: 111
+  jpa:
+    hibernate:
+      ddl-auto: update
+server:
+  port: 8080
+  # netstat -ano | findstr :8080
+  # taskkill /PID ..... /F
