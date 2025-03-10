@@ -1,4 +1,8 @@
 spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog.xml
+    default-schema: public
   application:
     name: game-shop-api
   datasource:
@@ -7,8 +11,13 @@ spring:
     password: 111
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+
 server:
   port: 8080
-  # netstat -ano | findstr :8080
-  # taskkill /PID ..... /F
+  # netstat -ano | findstr :8080 - для проверки занятости порта
+  # taskkill /PID ..... /F - для удаления задачи которая занимает порт
+
+logging:
+  level:
+    liquibase: DEBUG
