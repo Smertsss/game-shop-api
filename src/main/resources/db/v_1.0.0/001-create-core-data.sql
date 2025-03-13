@@ -15,7 +15,7 @@ CREATE TABLE genres (
 -- rollback DROP TABLE genres;
 
 -- changeset Boldenko Artem:3
-CREATE TABLE users (
+CREATE TABLE clients (
     id UUID PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
     second_name VARCHAR(255) NOT NULL,
@@ -27,9 +27,9 @@ CREATE TABLE users (
     last_login_date DATE NOT NULL,
     online BOOLEAN NOT NULL,
     role_id UUID NOT NULL,
-    CONSTRAINT fk_users_roles FOREIGN KEY (role_id) REFERENCES roles(id)
+    CONSTRAINT fk_clients_roles FOREIGN KEY (role_id) REFERENCES roles(id)
 );
--- rollback DROP TABLE users;
+-- rollback DROP TABLE clients;
 
 -- changeset Boldenko Artem:4
 CREATE TABLE games (
@@ -43,8 +43,8 @@ CREATE TABLE games (
     like_id UUID,
     dislike_id UUID,
     CONSTRAINT fk_games_genres FOREIGN KEY (genre_id) REFERENCES genres(id),
-    CONSTRAINT fk_games_likes FOREIGN KEY (like_id) REFERENCES users(id),
-    CONSTRAINT fk_games_dislikes FOREIGN KEY (dislike_id) REFERENCES users(id)
+    CONSTRAINT fk_games_likes FOREIGN KEY (like_id) REFERENCES clients(id),
+    CONSTRAINT fk_games_dislikes FOREIGN KEY (dislike_id) REFERENCES clients(id)
 );
 -- rollback DROP TABLE games;
 
@@ -56,7 +56,7 @@ CREATE TABLE game_studios (
     creation_date DATE NOT NULL,
     employees_id UUID,
     creation_game_id UUID,
-    CONSTRAINT fk_game_studios_employees FOREIGN KEY (employees_id) REFERENCES users(id),
+    CONSTRAINT fk_game_studios_employees FOREIGN KEY (employees_id) REFERENCES clients(id),
     CONSTRAINT fk_game_studios_creation_games FOREIGN KEY (creation_game_id) REFERENCES games(id)
 );
 -- rollback DROP TABLE game_studios;
