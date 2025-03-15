@@ -24,10 +24,9 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @UuidGenerator
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = Fields.id, updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "name", nullable = false, length = 32)
     private String name;
 
     @ManyToMany(mappedBy = "roles")

@@ -29,28 +29,28 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @UuidGenerator
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = Fields.id, updatable = false, nullable = false)
     private UUID id;
 
     private String firstName;
     private String secondName;
 
-    @Column(name = "username", nullable = false, unique = true, length = 32)
+    @Column(name = Fields.username, nullable = false, unique = true, length = 32)
     private String username;
 
-    @Column(name = "email", nullable = false, unique = true, length = 32)
+    @Column(name = Fields.email, nullable = false, unique = true, length = 32)
     private String email;
 
     private String login;
     private String password;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = Fields.creationDate, nullable = false)
     private LocalDateTime creationDate;
 
-    @Column(name = "lastLogin_date", nullable = false)
+    @Column(name = Fields.lastLoginDate, nullable = false)
     private LocalDateTime lastLoginDate;
 
-    @Column(name = "online", nullable = false)
+    @Column(name = Fields.online, nullable = false)
     private boolean online;
 
     @ManyToMany
