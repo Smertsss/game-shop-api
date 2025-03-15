@@ -21,3 +21,8 @@ server:
 logging:
   level:
     liquibase: DEBUG
+    root: INFO
+  org:
+    springframework:
+      security: DEBUG
+      web: DEBUG
