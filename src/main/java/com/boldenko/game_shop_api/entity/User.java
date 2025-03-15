@@ -1,10 +1,8 @@
 package com.boldenko.game_shop_api.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,12 +15,14 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Data
 @Builder
 @Entity
 @Table(name = User.TABLE_NAME)
+@FieldNameConstants
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class User implements UserDetails {
     public static final String TABLE_NAME = "clients";
 
@@ -32,22 +32,16 @@ public class User implements UserDetails {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "first_name", nullable = false, length = 20)
     private String firstName;
-
-    @Column(name = "second_name", nullable = false, length = 20)
     private String secondName;
 
-    @Column(name = "username", nullable = false, unique = true, length = 33)
+    @Column(name = "username", nullable = false, unique = true, length = 32)
     private String username;
 
-    @Column(name = "email", nullable = false, unique = true, length = 33)
+    @Column(name = "email", nullable = false, unique = true, length = 32)
     private String email;
 
-    @Column(name = "login", nullable = false, length = 33)
     private String login;
-
-    @Column(name = "password", nullable = false, length = 33)
     private String password;
 
     @Column(name = "creation_date", nullable = false)

@@ -2,7 +2,9 @@ package com.boldenko.game_shop_api.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -14,6 +16,8 @@ import java.util.UUID;
 @FieldNameConstants
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class Role {
     public static final String TABLE_NAME = "roles";
 
@@ -28,8 +32,4 @@ public class Role {
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
-
-    public String getName() {
-        return name;
-    }
 }

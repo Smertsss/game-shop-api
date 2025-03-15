@@ -2,29 +2,28 @@ package com.boldenko.game_shop_api.service;
 
 import com.boldenko.game_shop_api.entity.User;
 import com.boldenko.game_shop_api.repository.UserRepo;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final UserRepo userRepo;
-
-    public UserService(UserRepo userRepo) {
-        this.userRepo = userRepo;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepo.findByUsername(username)
                 .orElseThrow(() -> {
-                    System.out.println("User not found: " + username); // Логирование
+                   log.info("User not found: " + username);
                     return new UsernameNotFoundException("User not found with username: " + username);
                 });
-
-        System.out.println("User found: " + user.getUsername()); // Логирование
+        log.info("User found: " + user.getUsername());
         return user;
     }
 }
