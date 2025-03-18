@@ -10,19 +10,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Builder
 @Entity
-@Table(name = User.TABLE_NAME)
-@FieldNameConstants
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@FieldNameConstants
+@AllArgsConstructor
+@Table(name = User.TABLE_NAME)
 public class User implements UserDetails {
     public static final String TABLE_NAME = "clients";
 
@@ -41,6 +39,7 @@ public class User implements UserDetails {
     @Column(name = Fields.email, nullable = false, unique = true, length = 32)
     private String email;
 
+    @Column(name = Fields.login, nullable = false, unique = true, length = 32)
     private String login;
     private String password;
 
@@ -85,10 +84,23 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_company",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "company_id")
+    )
+    private Set<Company> companies;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return online;
     }
 }

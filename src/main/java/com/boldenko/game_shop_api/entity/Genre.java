@@ -12,22 +12,21 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = Genre.TABLE_NAME)
-@FieldNameConstants
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldNameConstants
+@Table(name = Genre.TABLE_NAME)
 public class Genre {
     public static final String TABLE_NAME = "genres";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @UuidGenerator
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = Fields.id, updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "name", nullable = false, length = 64)
     private String name;
 
     @ManyToMany(mappedBy = "genres")

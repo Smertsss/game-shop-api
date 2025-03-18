@@ -1,6 +1,6 @@
 package com.boldenko.game_shop_api.config;
 
-import com.boldenko.game_shop_api.service.UserService;
+import com.boldenko.game_shop_api.service.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 public class WebSecurityConfig {
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -45,6 +45,6 @@ public class WebSecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Использование BCrypt для шифрования паролей
+        return new BCryptPasswordEncoder();
     }
 }
