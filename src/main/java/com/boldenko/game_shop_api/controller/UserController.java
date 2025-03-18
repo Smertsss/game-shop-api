@@ -16,12 +16,17 @@ public class UserController {
     private final UserServiceImpl userService;
 
     @PostMapping
-    public UUID createUser(UserDto userDto) {
+    public UUID createUser(@RequestBody UserDto userDto) {
         return userService.createUser(userDto);
     }
 
+    @GetMapping("/{id}")
+    public UserDto getUserById(@PathVariable UUID id) {
+        return userService.getUserById(id);
+    }
+
     @DeleteMapping("/{id}")
-    public void deleteUserById(UUID id) {
+    public void deleteUserById(@PathVariable UUID id) {
         userService.deleteUserById(id);
     }
 

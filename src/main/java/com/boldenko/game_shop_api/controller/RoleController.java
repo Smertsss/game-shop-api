@@ -16,17 +16,17 @@ public class RoleController {
     private final RoleServiceImpl roleService;
 
     @PostMapping
-    public UUID createRole(RoleDto roleDto) {
+    public UUID createRole(@RequestBody RoleDto roleDto) {
         return roleService.createRole(roleDto);
     }
 
     @GetMapping("/{id}")
-    public RoleDto getRoleById(UUID id) {
+    public RoleDto getRoleById(@PathVariable UUID id) {
         return roleService.getRoleById(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRoleById(UUID id) {
+    public void deleteRoleById(@PathVariable UUID id) {
         roleService.deleteRoleById(id);
     }
 

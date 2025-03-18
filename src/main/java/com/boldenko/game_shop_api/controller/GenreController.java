@@ -16,17 +16,17 @@ public class GenreController {
     private final GenreServiceImpl genreService;
 
     @PostMapping
-    public UUID createGenre(GenreDto genreDto) {
+    public UUID createGenre(@RequestBody GenreDto genreDto) {
         return genreService.createGenre(genreDto);
     }
 
     @GetMapping("/{id}")
-    public GenreDto getGenreById(UUID id) {
+    public GenreDto getGenreById(@PathVariable UUID id) {
         return genreService.getGenreById(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteGenreById(UUID id) {
+    public void deleteGenreById(@PathVariable UUID id) {
         genreService.deleteGenreById(id);
     }
 

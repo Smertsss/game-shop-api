@@ -16,17 +16,17 @@ public class GameController {
     private final GameServiceImpl gameService;
 
     @PostMapping
-    public UUID createGame(GameDto gameDto) {
+    public UUID createGame(@RequestBody GameDto gameDto) {
         return gameService.createGame(gameDto);
     }
 
     @GetMapping("/{id}")
-    public GameDto getGameById(UUID id) {
+    public GameDto getGameById(@PathVariable UUID id) {
         return gameService.getGameById(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteGameById(UUID id) {
+    public void deleteGameById(@PathVariable UUID id) {
         gameService.deleteGameById(id);
     }
 

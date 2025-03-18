@@ -55,6 +55,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public UserDto getUserById(UUID id) {
+        return mapper.toUserDto(userRepo.findById(id).orElseThrow());
+    }
+
+    @Override
     public void deleteUserById(UUID id) {
         String name = mapper.toUserDto(userRepo.findById(id).orElseThrow()).getUsername();
         userRepo.deleteById(id);

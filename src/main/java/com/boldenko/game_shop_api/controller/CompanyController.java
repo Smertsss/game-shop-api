@@ -16,17 +16,17 @@ public class CompanyController {
     private final CompanyServiceImpl companyService;
 
     @PostMapping
-    public UUID createBar(@RequestParam CompanyDto companyDto) {
+    public UUID createCompany(@RequestBody CompanyDto companyDto) {
         return companyService.createCompany(companyDto);
     }
 
     @GetMapping("/{id}")
-    public CompanyDto getCompany(@RequestParam UUID id) {
+    public CompanyDto getCompany(@PathVariable UUID id) {
         return companyService.getCompanyById(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCompany(@RequestParam UUID id) {
+    public void deleteCompany(@PathVariable UUID id) {
         companyService.deleteCompanyById(id);
     }
 
