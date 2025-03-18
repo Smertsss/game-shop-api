@@ -9,36 +9,30 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-@Builder
 @Entity
-@Table(name = Game.TABLE_NAME)
-@FieldNameConstants
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@FieldNameConstants
+@AllArgsConstructor
+@Table(name = Game.TABLE_NAME)
 public class Game {
     public static final String TABLE_NAME = "games";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @UuidGenerator
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = Fields.id, updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "name", nullable = false, length = 64)
     private String name;
-
-    @Column(name = "context", nullable = false)
     private String context;
-
-    @Column(name = "cost", nullable = false)
     private float cost;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = Fields.creationDate, nullable = false)
     private LocalDateTime creationDate;
 
-    @Column(name = "update_date", nullable = false)
+    @Column(name = Fields.updateDate, nullable = false)
     private LocalDateTime updateDate;
 
     @ManyToMany(mappedBy = "games")
@@ -49,6 +43,14 @@ public class Game {
 
     @ManyToMany(mappedBy = "dislikedGames")
     private Set<User> dislikedByUsers;
+
+    @ManyToMany
+    @JoinTable(
+            name = "game_company",
+            joinColumns = @JoinColumn(name = "game_id"),
+            inverseJoinColumns = @JoinColumn(name = "company_id")
+    )
+    private Set<Company> companies;
 
     @ManyToMany
     @JoinTable(
