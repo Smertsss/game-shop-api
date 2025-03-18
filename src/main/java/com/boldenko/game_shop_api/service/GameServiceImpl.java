@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class GameServiceImpl implements GameService{
     private final DataMapper mapper;
@@ -22,8 +22,7 @@ public class GameServiceImpl implements GameService{
     @Override
     @Transactional
     public UUID createGame(GameDto gameDto) {
-        Game game = mapper.toGame(gameDto);
-        gameRepo.save(game);
+        Game game = gameRepo.save(mapper.toGame(gameDto));
         log.info("Add Game: " + game.getName());
         return game.getId();
     }
@@ -31,9 +30,9 @@ public class GameServiceImpl implements GameService{
     @Override
     @Transactional
     public UUID createGame(Game game) {
-        gameRepo.save(game);
+        UUID id = gameRepo.save(game).getId();
         log.info("Add Game: " + game.getName());
-        return game.getId();
+        return id;
     }
 
     @Override

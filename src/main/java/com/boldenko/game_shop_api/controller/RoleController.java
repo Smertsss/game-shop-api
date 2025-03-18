@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(RoleController.PATH_NAME)
 @RequiredArgsConstructor
+@RequestMapping(RoleController.PATH_NAME)
 public class RoleController {
     public static final String PATH_NAME = "/api/roles";
     private final RoleServiceImpl roleService;

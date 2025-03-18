@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserDetailsService, UserService {
     private final PasswordEncoder passwordEncoder;
@@ -40,18 +40,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public UUID createUser(UserDto userDto) {
         User user = mapper.toUser(userDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepo.save(user);
+        UUID id = userRepo.save(user).getId();
         log.info("Add User: " + user.getUsername());
-        return user.getId();
+        return id;
     }
 
     @Override
     @Transactional
     public UUID createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepo.save(user);
+        UUID id = userRepo.save(user).getId();
         log.info("Add User: " + user.getUsername());
-        return user.getId();
+        return id;
     }
 
     @Override

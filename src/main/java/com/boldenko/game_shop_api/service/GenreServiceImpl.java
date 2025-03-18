@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class GenreServiceImpl implements GenreService{
     private final DataMapper mapper;
@@ -22,8 +22,7 @@ public class GenreServiceImpl implements GenreService{
     @Override
     @Transactional
     public UUID createGenre(GenreDto genreDto) {
-        Genre genre = mapper.toGenre(genreDto);
-        genreRepo.save(genre);
+        Genre genre = genreRepo.save(mapper.toGenre(genreDto));
         log.info("Add Genre: " + genre.getName());
         return genre.getId();
     }
@@ -31,9 +30,9 @@ public class GenreServiceImpl implements GenreService{
     @Override
     @Transactional
     public UUID createGenre(Genre genre) {
-        genreRepo.save(genre);
+        UUID id = genreRepo.save(genre).getId();
         log.info("Add Genre: " + genre.getName());
-        return genre.getId();
+        return id;
     }
 
     @Override

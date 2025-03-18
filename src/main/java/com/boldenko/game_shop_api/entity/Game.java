@@ -9,14 +9,13 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-@Builder
 @Entity
-@Table(name = Game.TABLE_NAME)
-@FieldNameConstants
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@FieldNameConstants
+@AllArgsConstructor
+@Table(name = Game.TABLE_NAME)
 public class Game {
     public static final String TABLE_NAME = "games";
 

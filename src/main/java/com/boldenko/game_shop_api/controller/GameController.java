@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(GameController.PATH_NAME)
 @RequiredArgsConstructor
+@RequestMapping(GameController.PATH_NAME)
 public class GameController {
     public static final String PATH_NAME = "/api/games";
     private final GameServiceImpl gameService;

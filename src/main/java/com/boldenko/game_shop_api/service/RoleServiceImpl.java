@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService{
     private final DataMapper mapper;
@@ -22,8 +22,7 @@ public class RoleServiceImpl implements RoleService{
     @Override
     @Transactional
     public UUID createRole(RoleDto roleDto) {
-        Role role = mapper.toRole(roleDto);
-        roleRepo.save(role);
+        Role role = roleRepo.save(mapper.toRole(roleDto));
         log.info("Add Role: " + role.getName());
         return role.getId();
     }
@@ -31,9 +30,9 @@ public class RoleServiceImpl implements RoleService{
     @Override
     @Transactional
     public UUID createRole(Role role) {
-        roleRepo.save(role);
+        UUID id = roleRepo.save(role).getId();
         log.info("Add Role: " + role.getName());
-        return role.getId();
+        return id;
     }
 
     @Override

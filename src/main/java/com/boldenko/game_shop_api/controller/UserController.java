@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(UserController.PATH_NAME)
 @RequiredArgsConstructor
+@RequestMapping(UserController.PATH_NAME)
 public class UserController {
     public static final String PATH_NAME = "/api/clients";
     private final UserServiceImpl userService;

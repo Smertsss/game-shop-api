@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(GenreController.PATH_NAME)
 @RequiredArgsConstructor
+@RequestMapping(GenreController.PATH_NAME)
 public class GenreController {
     public static final String PATH_NAME = "/api/genres";
     private final GenreServiceImpl genreService;

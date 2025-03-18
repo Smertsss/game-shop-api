@@ -14,14 +14,13 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Builder
 @Entity
-@Table(name = User.TABLE_NAME)
-@FieldNameConstants
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@FieldNameConstants
+@AllArgsConstructor
+@Table(name = User.TABLE_NAME)
 public class User implements UserDetails {
     public static final String TABLE_NAME = "clients";
 

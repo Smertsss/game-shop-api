@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
     private final DataMapper mapper;
@@ -22,18 +22,17 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     @Transactional
     public UUID createCompany(CompanyDto companyDto) {
-        Company company = mapper.toCompany(companyDto);
-        companyRepo.save(company);
+        Company company = companyRepo.save(mapper.toCompany(companyDto));
         log.info("Add Company: " + company.getName());
-        return null;
+        return company.getId();
     }
 
     @Override
     @Transactional
     public UUID createCompany(Company company) {
-        companyRepo.save(company);
+        UUID id = companyRepo.save(company).getId();
         log.info("Add Company: " + company.getName());
-        return null;
+        return id;
     }
 
     @Override
