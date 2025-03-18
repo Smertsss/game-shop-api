@@ -41,6 +41,7 @@ public class User implements UserDetails {
     @Column(name = Fields.email, nullable = false, unique = true, length = 32)
     private String email;
 
+    @Column(name = Fields.login, nullable = false, unique = true, length = 32)
     private String login;
     private String password;
 

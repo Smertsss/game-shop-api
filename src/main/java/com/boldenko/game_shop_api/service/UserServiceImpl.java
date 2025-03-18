@@ -25,11 +25,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final DataMapper mapper;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepo.findByUsername(username)
+    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+        User user = userRepo.findByIdentifier(identifier)
                 .orElseThrow(() -> {
-                   log.info("User not found: " + username);
-                    return new UsernameNotFoundException("User not found with username: " + username);
+                    log.info("User not found: " + identifier);
+                    return new UsernameNotFoundException("User not found with identifier: " + identifier);
                 });
         log.info("User found: " + user.getUsername());
         return user;
