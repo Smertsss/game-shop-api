@@ -12,12 +12,12 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = Role.TABLE_NAME)
-@FieldNameConstants
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@FieldNameConstants
+@AllArgsConstructor
+@Table(name = Role.TABLE_NAME)
 public class Role {
     public static final String TABLE_NAME = "roles";
 

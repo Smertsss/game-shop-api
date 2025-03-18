@@ -12,11 +12,20 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+  mvc:
+    static-path-pattern: /**
+    web:
+      resources:
+        static-locations: classpath:/static/
 
 server:
   port: 8080
   # netstat -ano | findstr :8080 - для проверки занятости порта
   # taskkill /PID ..... /F - для удаления задачи которая занимает порт
+
+  # cd frontend - 1 часть
+  # ng serve - 2 часть для запуска сервера
+  # Ctrl + C - для отключение сервера
 
 logging:
   level:
