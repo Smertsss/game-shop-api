@@ -1,6 +1,5 @@
 package com.boldenko.game_shop_api.service;
 
-import com.boldenko.game_shop_api.dto.CompanyDto;
 import com.boldenko.game_shop_api.dto.UserDto;
 import com.boldenko.game_shop_api.entity.User;
 

@@ -1,6 +1,5 @@
 package com.boldenko.game_shop_api.service;
 
-import com.boldenko.game_shop_api.dto.CompanyDto;
 import com.boldenko.game_shop_api.dto.GenreDto;
 import com.boldenko.game_shop_api.entity.Genre;
 

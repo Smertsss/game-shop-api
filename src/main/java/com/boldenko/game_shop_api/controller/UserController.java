@@ -1,10 +1,8 @@
 package com.boldenko.game_shop_api.controller;
 
 import com.boldenko.game_shop_api.dto.UserDto;
-import com.boldenko.game_shop_api.entity.User;
 import com.boldenko.game_shop_api.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
