@@ -1,0 +1,15 @@
+<nav *ngIf="showNavbar" class="navbar">
+  <div class="navbar-container">
+    <a routerLink="/" class="navbar-brand">GameShop</a>
+
+    <div class="navbar-links">
+      <a routerLink="/clients" class="nav-link">Пользователи</a>
+      <a routerLink="/games" class="nav-link">Игры</a>
+      <a routerLink="/companies" class="nav-link">Компании</a>
+    </div>
+
+    <div class="navbar-actions">
+      <button routerLink="/login" class="logout-button">Вход</button>
+    </div>
+  </div>
+</nav>

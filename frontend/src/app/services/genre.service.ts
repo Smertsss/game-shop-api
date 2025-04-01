@@ -7,7 +7,7 @@ import { Genre, GenreCreateDto, GenreUpdateDto } from '../models/genre.model';
   providedIn: 'root'
 })
 export class GenreService {
-  private apiUrl = '/api/genres';
+  private apiUrl = 'http://localhost:8080/api/genres';
 
   constructor(private http: HttpClient) {}
 

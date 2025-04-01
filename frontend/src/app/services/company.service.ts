@@ -7,6 +7,7 @@ import { Company, CompanyCreateDto, CompanyUpdateDto } from '../models/company.m
   providedIn: 'root'
 })
 export class CompanyService {
+  private apiUrl = 'http://localhost:8080/api/companies';
 
   constructor(private http: HttpClient) {}
 

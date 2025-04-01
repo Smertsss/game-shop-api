@@ -7,7 +7,7 @@ import { User, UserCreateDto, UserUpdateDto, AuthUser, AuthResponse } from '../m
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = '/api/clients';
+  private apiUrl = 'http://localhost:8080/api/clients';
 
   constructor(private http: HttpClient) {}
 

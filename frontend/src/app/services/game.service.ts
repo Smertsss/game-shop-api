@@ -7,7 +7,7 @@ import { Game, GameCreateDto, GameUpdateDto } from '../models/game.model';
   providedIn: 'root'
 })
 export class GameService {
-  private apiUrl = '/api/games';
+  private apiUrl = 'http://localhost:8080/api/games';
 
   constructor(private http: HttpClient) {}
 
