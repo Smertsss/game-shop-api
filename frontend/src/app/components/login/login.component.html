@@ -9,7 +9,12 @@
   <div class="login-card">
     <h2>Вход в систему</h2>
 
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
     <form (ngSubmit)="onLogin()" class="login-form">
+
       <div class="form-group">
         <label for="username">Email или логин</label>
         <input

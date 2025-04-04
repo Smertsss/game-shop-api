@@ -12,6 +12,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping(CompanyController.PATH_NAME)
 public class CompanyController {
+
     public static final String PATH_NAME = "/api/companies";
     private final CompanyServiceImpl companyService;
 
@@ -34,4 +35,5 @@ public class CompanyController {
     public List<CompanyDto> getAllCompany() {
         return companyService.getAllCompany();
     }
+
 }

@@ -5,10 +5,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { of, throwError } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
     standalone: true,
-    imports: [FormsModule],
+    imports: [
+        FormsModule,
+        CommonModule
+        ],
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css']
@@ -43,10 +47,11 @@ export class LoginComponent {
         body.set('password', this.credentials.password);
 
         const headers = new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
         });
 
-        console.log('/api/login: ', body.toString());
+        const cookieValue = this.getCsrfToken();
+        console.log('/api/login: ', body.toString(), 'XSRF-TOKEN: ', cookieValue);
 
         this.http.post<{ redirectUrl: string }>('/api/login', body.toString(), {
             headers,
@@ -59,12 +64,14 @@ export class LoginComponent {
                     this.errorMessage = 'Сервер успешно обработал запрос';
                 } else if (error.status === 401) {
                     this.errorMessage = 'Неверный логин или пароль';
+                } else if (error.status === 500) {
+                    this.errorMessage = 'Произошла на сервере. Попробуйте позже';
                 } else {
                     this.errorMessage = 'Произошла ошибка при входе. Попробуйте позже.';
                 }
 
                 console.log(this.errorMessage, ' Status: ', error.status);
-                //return of(null);
+                this.errorMessage = this.errorMessage;
                 return throwError(() => error);
             })
         )
@@ -74,9 +81,17 @@ export class LoginComponent {
 
             if (response) {
                 console.log('Успешный вход - перенаправляем');
-                this.router.navigateByUrl(response.redirectUrl || '/home');
+                this.router.navigateByUrl(response.redirectUrl || '/');
             }
         });
+    }
+
+    getCsrfToken(): string {
+        const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1];
+        return cookieValue || '';
     }
 
   navigateToRegister() {

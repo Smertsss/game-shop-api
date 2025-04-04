@@ -3,7 +3,6 @@ import { RouterOutlet } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -13,8 +12,7 @@ import { CommonModule } from '@angular/common';
   imports: [
     RouterOutlet,
     FormsModule,
-    NavbarComponent,
-    CommonModule
+    NavbarComponent
     ]
 })
 export class AppComponent {
@@ -22,7 +20,7 @@ export class AppComponent {
 
   constructor(public router: Router) {}
 
-  get showNavbar(): boolean {
+  showNavbar(): boolean {
     return !this.router.url.includes('/login');
   }
 }

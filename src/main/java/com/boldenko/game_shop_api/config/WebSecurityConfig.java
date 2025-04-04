@@ -25,7 +25,7 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers("/api/login")
+                        .disable()
                 )
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/home", "/login", "/register", "/static/**", "/*.js", "/*.css",
@@ -38,7 +38,7 @@ public class WebSecurityConfig {
                         .loginProcessingUrl("/api/login")
                         .successHandler((request, response, authentication) -> {
                             response.setContentType("application/json");
-                            response.getWriter().write("{\"redirectUrl\": \"/home\"}");
+                            response.getWriter().write("{\"redirectUrl\": \"/\"}");
                         })
                         .failureHandler((request, response, exception) -> {
                             response.setContentType("application/json");

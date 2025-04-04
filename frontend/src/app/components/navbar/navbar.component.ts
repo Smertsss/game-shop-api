@@ -8,12 +8,21 @@ import { CommonModule } from '@angular/common';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
   standalone: true,
-  imports: [CommonModule, RouterModule]
+  imports: [
+    CommonModule,
+    RouterModule
+    ]
 })
 export class NavbarComponent {
+  currentUserRole: string = 'USER';
+
   constructor(public router: Router) {}
 
-  get showNavbar(): boolean {
-    return !this.router.url.includes('/login');
+  isAdmin(): boolean {
+    return this.currentUserRole === 'ADMIN';
+  }
+
+  isUser(): boolean {
+    return this.currentUserRole === 'USER';
   }
 }
