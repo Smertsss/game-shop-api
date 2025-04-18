@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User, UserCreateDto, UserUpdateDto, AuthUser, AuthResponse } from '../models/user.model';
 
@@ -8,6 +8,7 @@ import { User, UserCreateDto, UserUpdateDto, AuthUser, AuthResponse } from '../m
 })
 export class UserService {
   private apiUrl = 'http://localhost:8080/api/clients';
+  private authUrl = 'http://localhost:8080/api/auth';
 
   constructor(private http: HttpClient) {}
 
@@ -37,5 +38,32 @@ export class UserService {
 
   addGamesToUser(userId: string, gameIds: string[]): Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/${userId}/games`, { gameIds });
+  }
+
+  login(authUser: AuthUser): Observable<User> {
+    const body = new URLSearchParams();
+    body.set('username', authUser.login);
+    body.set('password', authUser.password);
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
+    });
+
+    return this.http.post<User>(`${this.authUrl}/login`, body.toString(), {
+      headers,
+      withCredentials: true // Важно для работы с сессиями и cookies
+    });
+  }
+
+  logout(): Observable<void> {
+    return this.http.post<void>(`${this.authUrl}/logout`, {}, {
+      withCredentials: true
+    });
+  }
+
+  getCurrentUser(): Observable<User> {
+    return this.http.get<User>(`${this.authUrl}/current`, {
+      withCredentials: true
+    });
   }
 }

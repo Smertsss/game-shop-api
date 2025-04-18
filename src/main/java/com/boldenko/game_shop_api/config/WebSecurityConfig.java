@@ -35,10 +35,12 @@ public class WebSecurityConfig {
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
-                        .loginProcessingUrl("/api/login")
+                        .loginProcessingUrl("/api/auth/login")
                         .successHandler((request, response, authentication) -> {
                             response.setContentType("application/json");
-                            response.getWriter().write("{\"redirectUrl\": \"/\"}");
+                            response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+                            response.setHeader("Access-Control-Allow-Credentials", "true");
+                            response.getWriter().write("{\"redirectUrl\": \"/home\"}");
                         })
                         .failureHandler((request, response, exception) -> {
                             response.setContentType("application/json");
@@ -59,8 +61,17 @@ public class WebSecurityConfig {
                             response.getWriter().write("{\"error\": \"Access denied\"}");
                         })
                 )
-                .logout((logout) -> logout
-                        .logoutSuccessUrl("/home")
+                .logout(logout -> logout
+                        .logoutUrl("/api/auth/logout")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setContentType("application/json");
+                            response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+                            response.setHeader("Access-Control-Allow-Credentials", "true");
+                            response.getWriter().write("{\"status\":\"success\"}");
+                        })
+                        .deleteCookies("JSESSIONID", "XSRF-TOKEN") // Удаляем все используемые куки
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
                         .permitAll()
                 );
 

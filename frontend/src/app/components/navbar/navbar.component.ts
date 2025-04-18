@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../authentication/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,7 +17,10 @@ import { CommonModule } from '@angular/common';
 export class NavbarComponent {
   currentUserRole: string = 'USER';
 
-  constructor(public router: Router) {}
+  constructor(
+    public router: Router,
+    public authService: AuthService
+    ) {}
 
   isAdmin(): boolean {
     return this.currentUserRole === 'ADMIN';
@@ -24,5 +28,20 @@ export class NavbarComponent {
 
   isUser(): boolean {
     return this.currentUserRole === 'USER';
+  }
+
+  getAuthenticated(): string {
+      return this.authService.isAuthenticated() ? '/home' : '/';
+  }
+
+  logout(): void {
+      this.authService.logout().subscribe({
+          next: () => {
+              console.log('Logout successful');
+          },
+          error: (err: Error) => {
+              console.error('Logout failed:', err);
+          }
+      });
   }
 }

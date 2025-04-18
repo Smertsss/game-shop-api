@@ -1,6 +1,6 @@
 <nav class="navbar">
   <div class="navbar-container">
-    <a routerLink="/" class="navbar-brand">GameShop</a>
+    <a [routerLink]="getAuthenticated()" class="navbar-brand">GameShop</a>
 
     <div class="navbar-links">
       @if (isAdmin()) {
@@ -19,7 +19,11 @@
     </div>
 
     <div class="navbar-actions">
+      @if (authService.isAuthenticated()) {
+      <button (click)="logout()" class="logout-button">Выход</button>
+      } @else {
       <button routerLink="/login" class="logout-button">Вход</button>
+      }
     </div>
   </div>
 </nav>
