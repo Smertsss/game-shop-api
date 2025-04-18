@@ -30,10 +30,6 @@ export class NavbarComponent {
     return this.currentUserRole === 'USER';
   }
 
-  getAuthenticated(): string {
-      return this.authService.isAuthenticated() ? '/home' : '/';
-  }
-
   logout(): void {
       this.authService.logout().subscribe({
           next: () => {

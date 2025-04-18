@@ -1,6 +1,8 @@
 <nav class="navbar">
   <div class="navbar-container">
-    <a [routerLink]="getAuthenticated()" class="navbar-brand">GameShop</a>
+    <div class="navbar-top">
+      <a  routerLink="/main-games" class="navbar-brand">GameShop</a>
+    </div>
 
     <div class="navbar-links">
       @if (isAdmin()) {
@@ -10,11 +12,9 @@
       }
 
       @if (isUser()) {
-      <a routerLink="/games" class="nav-link">Игры</a>
       <a routerLink="/new-game" class="nav-link">Новинки</a>
-      <a routerLink="/updated-game" class="nav-link">Обновления</a>
-      <a routerLink="/top-game" class="nav-link">Топ игры</a>
-      <a routerLink="/random-game" class="nav-link">Рандом</a>
+      <a routerLink="/update-games" class="nav-link">Обновления</a>
+      <a routerLink="/top-games" class="nav-link">Топ игр</a>
       }
     </div>
 

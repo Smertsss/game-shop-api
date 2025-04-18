@@ -28,8 +28,9 @@ public class WebSecurityConfig {
                         .disable()
                 )
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home", "/login", "/register", "/static/**", "/*.js", "/*.css",
-                                "/*.ico", "/assets/**", "/api/**")
+                        .requestMatchers("/", "/main-games", "/new-games", "/top-games", "/update-games",
+                                "/login", "/register", "/static/**", "/*.js", "/*.css", "/*.ico", "/assets/**",
+                                "/api/**")
                         .permitAll()
                         .anyRequest().authenticated()
                 )

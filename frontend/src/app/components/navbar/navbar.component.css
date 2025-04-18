@@ -7,10 +7,18 @@
 
 .navbar-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   max-width: 1200px;
   margin: 0 auto;
+  position: relative;
+}
+
+.navbar-top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding-bottom: 1rem;
 }
 
 .navbar-brand {
@@ -22,6 +30,7 @@
 
 .navbar-links {
   display: flex;
+  justify-content: center;
   gap: 1.5rem;
 }
 
@@ -30,8 +39,7 @@
   text-decoration: none;
   font-size: 1rem;
   transition: color 0.3s;
-  padding: 10px 20px;
-  margin: -10px 10px;
+  padding: 0.5rem 1rem;
 }
 
 .nav-link:hover {
@@ -39,8 +47,10 @@
 }
 
 .navbar-actions {
-  display: flex;
-  gap: 1rem;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .logout-button {
