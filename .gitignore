@@ -1,9 +1,10 @@
-# Бэкенд (Java/Maven)
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+
+### STS ###
 .apt_generated
 .classpath
 .factorypath
@@ -12,32 +13,21 @@ target/
 .springBeans
 .sts4-cache
 
-# Фронтенд (Angular)
-/dist
-/tmp
-/out-tsc
-/bazel-out
-/node_modules
-npm-debug.log
-yarn-error.log
-.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-/testem.log
-/typings
-
-# Системные файлы/IDE
-.DS_Store
-Thumbs.db
-.idea/
+### IntelliJ IDEA ###
+.idea
 *.iws
 *.iml
 *.ipr
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
