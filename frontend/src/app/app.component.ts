@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +16,7 @@ import { AuthService } from './authentication/auth.service';
     NavbarComponent
     ]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'frontend';
 
   constructor(public router: Router, private authService: AuthService) {}

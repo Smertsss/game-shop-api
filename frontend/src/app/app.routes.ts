@@ -6,14 +6,21 @@ import { MainGamesComponent } from './components/main-games/main-games.component
 import { NewGamesComponent } from './components/new-games/new-games.component';
 import { UpdateGamesComponent } from './components/update-games/update-games.component';
 import { TopGamesComponent } from './components/top-games/top-games.component';
+import { UsersDataComponent } from './components/users-data/users-data.component';
+import { GamesDataComponent } from './components/games-data/games-data.component';
+import { CompaniesDataComponent } from './components/companies-data/companies-data.component';
+import { GenresDataComponent } from './components/genres-data/genres-data.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  //{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'main-games', component: MainGamesComponent },
   { path: 'new-game', component: NewGamesComponent },
   { path: 'update-games', component: UpdateGamesComponent },
   { path: 'top-games', component: TopGamesComponent },
+  { path: 'users-data', component: UsersDataComponent, canActivate: [AuthGuard] },
+  { path: 'games-data', component: GamesDataComponent, canActivate: [AuthGuard] },
+  { path: 'companies-data', component: CompaniesDataComponent, canActivate: [AuthGuard] },
+  { path: 'genres-data', component: GenresDataComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/main-games', pathMatch: 'full' },
   { path: '**', redirectTo: '/main-games' }
   ];

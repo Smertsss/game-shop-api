@@ -64,5 +64,5 @@ export interface UserPreview {
   email: string;
   online: boolean;
 
-  roleNames?: string[];
+  roles?: string[];
 }

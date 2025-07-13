@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { BehaviorSubject, Observable, catchError, of, tap } from 'rxjs';
-import { User } from '../models/user.model';
+import { User, UserPreview } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  private currentUserSubject = new BehaviorSubject<UserPreview | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(
@@ -18,11 +18,12 @@ export class AuthService {
     private router: Router
     ) {}
 
-  login(login: string, password: string): Observable<User | null> {
+  login(login: string, password: string): Observable<UserPreview | null> {
     return this.userService.login({ login, password }).pipe(
-      tap((user: User) => {
+      tap((user: UserPreview) => {
+        console.log('Roles after login:', user.roles);
         this.currentUserSubject.next(user);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/main-games']);
       }),
       catchError(error => {
         console.error('Login error', error);
@@ -35,7 +36,7 @@ export class AuthService {
       return this.userService.logout().pipe(
           tap(() => {
               this.currentUserSubject.next(null);
-              this.router.navigate(['/']);
+              this.router.navigate(['/main-games']);
               window.location.reload();
           }),
           catchError(error => {
@@ -46,27 +47,30 @@ export class AuthService {
   }
 
   checkAuthStatus(): void {
-      this.userService.getCurrentUser().subscribe({
-        next: (user: User) => {
-          this.currentUserSubject.next(user);
-          if (user) {
-            this.router.navigate(['/home']); // Перенаправляем авторизованных пользователей
-          } else {
-            this.router.navigate(['/']); // Перенаправляем неавторизованных на корень
-          }
-        },
-        error: () => {
-          this.currentUserSubject.next(null);
-          this.router.navigate(['/']); // При ошибке тоже на корень
-        }
-      });
-    }
+    this.userService.getCurrentUser().subscribe({
+      next: (user: UserPreview) => {
+        this.currentUserSubject.next(user);
+      },
+      error: () => {
+        this.currentUserSubject.next(null);
+      }
+    });
+  }
 
-  getCurrentUser(): User | null {
+  getCurrentUser(): UserPreview | null {
     return this.currentUserSubject.value;
   }
 
   isAuthenticated(): boolean {
     return this.currentUserSubject.value !== null;
+  }
+
+  hasRole(roleName: string): boolean {
+    const user = this.currentUserSubject.value;
+    return user?.roles?.includes(roleName) || false;
+  }
+
+  getRoles(): string[] {
+    return this.currentUserSubject.value?.roles || [];
   }
 }

@@ -2,16 +2,16 @@
   <div class="navbar-container">
     <div class="navbar-top">
       <a  routerLink="/main-games" class="navbar-brand">GameShop</a>
+
     </div>
 
     <div class="navbar-links">
-      @if (isAdmin()) {
-      <a routerLink="/clients-data" class="nav-link">Пользователи</a>
+      @if (currentUser?.roles?.includes('ADMIN')) {
+      <a routerLink="/users-data" class="nav-link">Пользователи</a>
       <a routerLink="/games-data" class="nav-link">Игры</a>
       <a routerLink="/companies-data" class="nav-link">Компании</a>
-      }
-
-      @if (isUser()) {
+      <a routerLink="/genres-data" class="nav-link">Жанры</a>
+      } @else {
       <a routerLink="/new-game" class="nav-link">Новинки</a>
       <a routerLink="/update-games" class="nav-link">Обновления</a>
       <a routerLink="/top-games" class="nav-link">Топ игр</a>

@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../authentication/auth.service';
+import { UserPreview } from '../../models/user.model';
 
 @Component({
   selector: 'app-navbar',
@@ -14,20 +15,24 @@ import { AuthService } from '../../authentication/auth.service';
     RouterModule
     ]
 })
-export class NavbarComponent {
-  currentUserRole: string = 'USER';
+export class NavbarComponent implements OnInit {
+  currentUser: UserPreview | null = null;
 
   constructor(
     public router: Router,
     public authService: AuthService
     ) {}
 
-  isAdmin(): boolean {
-    return this.currentUserRole === 'ADMIN';
+  ngOnInit(): void {
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+      console.log('Current user in navbar:', user);
+      console.log('Current roles:', user?.roles);
+    });
   }
 
-  isUser(): boolean {
-    return this.currentUserRole === 'USER';
+  hasRole(roleName: string): boolean {
+    return this.authService.hasRole(roleName);
   }
 
   logout(): void {

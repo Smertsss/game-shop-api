@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { User, UserCreateDto, UserUpdateDto, AuthUser, AuthResponse } from '../models/user.model';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+import { User, UserPreview, UserCreateDto, UserUpdateDto, AuthUser, AuthResponse } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +41,7 @@ export class UserService {
     return this.http.post<User>(`${this.apiUrl}/${userId}/games`, { gameIds });
   }
 
-  login(authUser: AuthUser): Observable<User> {
+  login(authUser: AuthUser): Observable<UserPreview> {
     const body = new URLSearchParams();
     body.set('username', authUser.login);
     body.set('password', authUser.password);
@@ -49,10 +50,17 @@ export class UserService {
       'Content-Type': 'application/x-www-form-urlencoded',
     });
 
-    return this.http.post<User>(`${this.authUrl}/login`, body.toString(), {
+    console.log('Sending login request');
+    return this.http.post<UserPreview>(`${this.authUrl}/login`, body.toString(), {
       headers,
-      withCredentials: true // Важно для работы с сессиями и cookies
-    });
+      withCredentials: true
+    }).pipe(
+      tap((response: UserPreview) => console.log('Login response:', response)),
+      catchError((error: any) => {
+        console.error('Login error:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   logout(): Observable<void> {
@@ -61,9 +69,17 @@ export class UserService {
     });
   }
 
-  getCurrentUser(): Observable<User> {
-    return this.http.get<User>(`${this.authUrl}/current`, {
-      withCredentials: true
-    });
-  }
+  getCurrentUser(): Observable<UserPreview> {
+      return this.http.get<any>(`${this.authUrl}/current`, {
+        withCredentials: true
+      }).pipe(
+        map((user: User) => ({
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          online: user.online,
+          roles: user.roles?.map(role => role.name)
+        }))
+      );
+    }
 }

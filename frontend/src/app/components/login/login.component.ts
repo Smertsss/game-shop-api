@@ -7,7 +7,7 @@ import { catchError } from 'rxjs/operators';
 import { of, throwError } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../authentication/auth.service';
-import { User } from '../../models/user.model';
+import { UserPreview  } from '../../models/user.model';
 
 @Component({
     standalone: true,
@@ -46,10 +46,10 @@ export class LoginComponent {
 
         this.authService.login(this.credentials.username, this.credentials.password)
             .subscribe({
-                next: (user: User | null) => {
+                next: (user: UserPreview | null) => {
                     this.isLoading = false;
                     if (!user) {
-                        this.errorMessage = 'Неверный логин или пароль';
+                      this.errorMessage = 'Неверный логин или пароль';
                     }
                 },
                 error: (error: any) => {
