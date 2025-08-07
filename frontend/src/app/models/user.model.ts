@@ -9,6 +9,7 @@ export interface User {
   username: string;
   email: string;
   login: string;
+  password: string;
   creationDate: Date;
   lastLoginDate: Date;
   online: boolean;
@@ -65,4 +66,16 @@ export interface UserPreview {
   online: boolean;
 
   roles?: string[];
+}
+
+export interface UserData {
+  id: string;
+  firstName: string;
+  secondName: string;
+  username: string;
+  email: string;
+  login: string;
+  creationDate: Date;
+  lastLoginDate: Date;
+  online: boolean;
 }

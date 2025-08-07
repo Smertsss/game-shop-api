@@ -3,6 +3,7 @@ package com.boldenko.game_shop_api.controller;
 import com.boldenko.game_shop_api.dto.CompanyDto;
 import com.boldenko.game_shop_api.service.CompanyServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class CompanyController {
         companyService.deleteCompanyById(id);
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CompanyDto> getAllCompany() {
         return companyService.getAllCompany();
     }

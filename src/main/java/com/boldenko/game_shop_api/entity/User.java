@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
@@ -44,10 +44,10 @@ public class User implements UserDetails {
     private String password;
 
     @Column(name = Fields.creationDate, nullable = false)
-    private LocalDateTime creationDate;
+    private LocalDate creationDate;
 
     @Column(name = Fields.lastLoginDate, nullable = false)
-    private LocalDateTime lastLoginDate;
+    private LocalDate lastLoginDate;
 
     @Column(name = Fields.online, nullable = false)
     private boolean online;

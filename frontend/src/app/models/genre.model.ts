@@ -20,7 +20,7 @@ export interface GenreUpdateDto {
   gameIds?: string[];
 }
 
-export interface GenrePreview {
+export interface GenreData {
   id: string;
   name: string;
 }

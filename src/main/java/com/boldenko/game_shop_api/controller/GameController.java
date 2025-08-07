@@ -3,6 +3,7 @@ package com.boldenko.game_shop_api.controller;
 import com.boldenko.game_shop_api.dto.GameDto;
 import com.boldenko.game_shop_api.service.GameServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class GameController {
         gameService.deleteGameById(id);
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<GameDto> getAllGame() {
         return gameService.getAllGame();
     }

@@ -1,1 +1,17 @@
-<p>companies-data works!</p>
+<div class="games-container">
+  <h1>Таблица Компаний</h1>
+
+  <div *ngIf="isLoading" class="loading">
+    Loading company data...
+  </div>
+
+  <div *ngIf="error" class="error">
+    {{ error }}
+  </div>
+
+  <app-data-table
+    *ngIf="!isLoading && !error"
+    [data]="companyData"
+    [columns]="columns">
+  </app-data-table>
+</div>

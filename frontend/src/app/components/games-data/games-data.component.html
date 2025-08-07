@@ -1,1 +1,17 @@
-<p>games-data works!</p>
+<div class="games-container">
+    <h1>Таблица Игр</h1>
+
+    <div *ngIf="isLoading" class="loading">
+        Loading games data...
+    </div>
+
+    <div *ngIf="error" class="error">
+        {{ error }}
+    </div>
+
+    <app-data-table
+            *ngIf="!isLoading && !error"
+            [data]="gamesData"
+            [columns]="columns">
+    </app-data-table>
+</div>

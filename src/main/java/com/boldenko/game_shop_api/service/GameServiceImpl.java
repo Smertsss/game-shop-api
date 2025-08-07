@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +51,28 @@ public class GameServiceImpl implements GameService{
 
     @Override
     public List<GameDto> getAllGame() {
-        return List.of((GameDto) gameRepo.findAll());
+        List<Game> games = gameRepo.findAll();
+        log.info("Found {} games in database", games.size());
+
+        List<GameDto> result = new ArrayList<>();
+
+        for (Game game : games) {
+            log.info("Processing game: ID={}, Name={}, CreationDate={}",
+                    game.getId(), game.getName(), game.getCreationDate());
+
+            GameDto dto = new GameDto();
+            dto.setId(game.getId());
+            dto.setName(game.getName());
+            dto.setContext(game.getContext());
+            dto.setCost(game.getCost());
+            dto.setCreationDate(game.getCreationDate());
+            dto.setUpdateDate(game.getUpdateDate());
+
+            log.info("Created DTO: {}", dto);
+            result.add(dto);
+        }
+
+        log.info("Returning {} game DTOs", result.size());
+        return result;
     }
 }

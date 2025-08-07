@@ -28,9 +28,9 @@ export interface CompanyUpdateDto {
   games?: Game[];
 }
 
-export interface CompanyPreview {
+export interface CompanyData {
   id: string;
   name: string;
   context: string;
-  creationDate: Date;
+  creationDate: string;
 }

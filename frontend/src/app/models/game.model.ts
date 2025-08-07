@@ -41,14 +41,11 @@ export interface GameUpdateDto {
   companyIds?: string[];
 }
 
-export interface GamePreview {
+export interface GameData {
   id: string;
   name: string;
   context: string;
   cost: number;
-  creationDate: Date;
-  updateDate: Date;
-
-  genreNames?: string[];
-  companyNames?: string[];
+  creationDate: string;
+  updateDate: string;
 }
