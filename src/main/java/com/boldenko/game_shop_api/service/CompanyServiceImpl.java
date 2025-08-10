@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +51,26 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<CompanyDto> getAllCompany() {
-        return List.of((CompanyDto) companyRepo.findAll());
+        List<Company> companies = companyRepo.findAll();
+        log.info("Found {} companies in database", companies.size());
+
+        List<CompanyDto> result = new ArrayList<>();
+
+        for (Company company : companies) {
+            log.info("Processing company: ID={}, Name={}, CreationDate={}",
+                    company.getId(), company.getName(), company.getCreationDate());
+
+            CompanyDto dto = new CompanyDto();
+            dto.setId(company.getId());
+            dto.setName(company.getName());
+            dto.setContext(company.getContext());
+            dto.setCreationDate(company.getCreationDate());
+
+            log.info("Created DTO: {}", dto);
+            result.add(dto);
+        }
+
+        log.info("Returning {} company DTOs", result.size());
+        return result;
     }
 }

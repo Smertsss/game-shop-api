@@ -1,0 +1,14 @@
+<div class="games-container">
+  <h1>Игры на ПК</h1>
+  <p>Вышедшие новинки и обновления</p>
+
+  <div *ngIf="isLoading" class="loading">
+    Loading games...
+  </div>
+
+  <div *ngIf="error" class="error">
+    {{ error }}
+  </div>
+
+  <app-list-of-games *ngIf="!isLoading && !error" [data]="games"></app-list-of-games>
+</div>
