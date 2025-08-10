@@ -5,7 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
@@ -30,10 +30,10 @@ public class Game {
     private float cost;
 
     @Column(name = Fields.creationDate, nullable = false)
-    private LocalDateTime creationDate;
+    private LocalDate creationDate;
 
     @Column(name = Fields.updateDate, nullable = false)
-    private LocalDateTime updateDate;
+    private LocalDate updateDate;
 
     @ManyToMany(mappedBy = "games")
     private Set<User> users;

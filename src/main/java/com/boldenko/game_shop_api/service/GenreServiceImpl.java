@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +51,24 @@ public class GenreServiceImpl implements GenreService{
 
     @Override
     public List<GenreDto> getAllGenre() {
-        return List.of((GenreDto) genreRepo.findAll());
+        List<Genre> genres = genreRepo.findAll();
+        log.info("Found {} genres in database", genres.size());
+
+        List<GenreDto> result = new ArrayList<>();
+
+        for (Genre genre : genres) {
+            log.info("Processing game: ID={}, Name={}",
+                    genre.getId(), genre.getName());
+
+            GenreDto dto = new GenreDto();
+            dto.setId(genre.getId());
+            dto.setName(genre.getName());
+
+            log.info("Created DTO: {}", dto);
+            result.add(dto);
+        }
+
+        log.info("Returning {} genre DTOs", result.size());
+        return result;
     }
 }
