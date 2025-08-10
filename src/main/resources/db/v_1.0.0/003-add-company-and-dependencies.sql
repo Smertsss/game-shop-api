@@ -1,10 +1,10 @@
 -- liquibase formatted sql
 
--- changeset YourName:1
+-- changeset Boldenko Artem:1
 DROP TABLE IF EXISTS game_studios;
 -- rollback CREATE TABLE game_studios (...);
 
--- changeset YourName:2
+-- changeset Boldenko Artem:2
 CREATE TABLE companies (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE companies (
 );
 -- rollback DROP TABLE companies;
 
--- changeset YourName:3
+-- changeset Boldenko Artem:3
 CREATE TABLE user_company (
     user_id UUID NOT NULL,
     company_id UUID NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE user_company (
 );
 -- rollback DROP TABLE user_company;
 
--- changeset YourName:4
+-- changeset Boldenko Artem:4
 CREATE TABLE game_company (
     game_id UUID NOT NULL,
     company_id UUID NOT NULL,

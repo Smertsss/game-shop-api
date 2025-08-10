@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,7 +32,7 @@ public class Company {
     private String context;
 
     @Column(name = Fields.creationDate, nullable = false)
-    private LocalDateTime creationDate;
+    private LocalDate creationDate;
 
     @ManyToMany(mappedBy = "companies")
     private Set<User> users;

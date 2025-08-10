@@ -13,8 +13,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -69,6 +71,32 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public List<UserDto> getAllUser() {
-        return List.of((UserDto) userRepo.findAll());
+        List<User> users = userRepo.findAll();
+        log.info("Found {} users in database", users.size());
+
+        List<UserDto> result = new ArrayList<>();
+
+        for (User user : users) {
+            log.info("Processing game: ID={}, Username={}, CreationDate={}",
+                    user.getId(), user.getUsername(), user.getCreationDate());
+
+            UserDto dto = new UserDto();
+            dto.setId(user.getId());
+            dto.setFirstName(user.getFirstName());
+            dto.setSecondName(user.getSecondName());
+            dto.setUsername(user.getUsername());
+            dto.setEmail(user.getEmail());
+            dto.setLogin(user.getLogin());
+            dto.setPassword(user.getPassword());
+            dto.setCreationDate(user.getCreationDate());
+            dto.setLastLoginDate(user.getLastLoginDate());
+            dto.setOnline(user.isOnline());
+
+            log.info("Created DTO: {}", dto);
+            result.add(dto);
+        }
+
+        log.info("Returning {} user DTOs", result.size());
+        return result;
     }
 }

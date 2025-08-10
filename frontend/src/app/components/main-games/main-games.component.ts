@@ -1,0 +1,23 @@
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { ListOfGamesComponent } from '../list-of-games/list-of-games.component';
+import { CommonModule } from '@angular/common';
+import { catchError, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+
+@Component({
+  selector: 'app-main-games',
+  templateUrl: './main-games.component.html',
+  styleUrl: './main-games.component.css',
+  standalone: true,
+  imports: [
+    FormsModule,
+    ListOfGamesComponent,
+    CommonModule
+  ]
+})
+export class MainGamesComponent {
+  isLoading = true;
+  error: string | null = null;
+}

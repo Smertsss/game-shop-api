@@ -1,7 +1,9 @@
 package com.boldenko.game_shop_api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -16,7 +18,12 @@ public class UserDto {
     private String email;
     private String login;
     private String password;
-    private LocalDateTime creationDate;
-    private LocalDateTime lastLoginDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate creationDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate lastLoginDate;
+
     private boolean online;
 }

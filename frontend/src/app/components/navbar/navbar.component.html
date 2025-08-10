@@ -1,0 +1,29 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-top">
+      <a  routerLink="/main-games" class="navbar-brand">GameShop</a>
+
+    </div>
+
+    <div class="navbar-links">
+      @if (currentUser?.roles?.includes('ADMIN')) {
+      <a routerLink="/users-data" class="nav-link">Пользователи</a>
+      <a routerLink="/games-data" class="nav-link">Игры</a>
+      <a routerLink="/companies-data" class="nav-link">Компании</a>
+      <a routerLink="/genres-data" class="nav-link">Жанры</a>
+      } @else {
+      <a routerLink="/new-game" class="nav-link">Новинки</a>
+      <a routerLink="/update-games" class="nav-link">Обновления</a>
+      <a routerLink="/top-games" class="nav-link">Топ игр</a>
+      }
+    </div>
+
+    <div class="navbar-actions">
+      @if (authService.isAuthenticated()) {
+      <button (click)="logout()" class="logout-button">Выход</button>
+      } @else {
+      <button routerLink="/login" class="logout-button">Вход</button>
+      }
+    </div>
+  </div>
+</nav>
