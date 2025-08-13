@@ -103,4 +103,12 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return online;
     }
+
+    @ElementCollection
+    @CollectionTable(
+            name = "user_image",
+            joinColumns = @JoinColumn(name = "user_id")
+    )
+    @Column(name = "image_name")
+    private Set<String> images;
 }

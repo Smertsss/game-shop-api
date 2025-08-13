@@ -16,7 +16,8 @@ export class ListOfGameService {
     return {
       id: gameData.id,
       title: gameData.name,
-      genre: []
+      genre: [],
+      images: gameData.images || []
     };
   }
 

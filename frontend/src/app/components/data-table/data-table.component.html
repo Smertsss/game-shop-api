@@ -2,11 +2,16 @@
   <thead>
   <tr>
     <th *ngFor="let column of columns">{{ column }}</th>
+    <th *ngIf="showActions">Действия</th>
   </tr>
   </thead>
   <tbody>
   <tr *ngFor="let item of data">
     <td *ngFor="let column of columns">{{ item[column] }}</td>
+    <td *ngIf="showActions" class="actions">
+      <button (click)="onEdit(item.id)" class="btn-edit">Изменить</button>
+      <button (click)="onDelete(item.id)" class="btn-delete">Удалить</button>
+    </td>
   </tr>
   </tbody>
 </table>

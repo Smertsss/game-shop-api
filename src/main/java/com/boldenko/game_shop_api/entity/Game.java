@@ -59,4 +59,12 @@ public class Game {
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
     private Set<Genre> genres;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "game_image",
+            joinColumns = @JoinColumn(name = "game_id")
+    )
+    @Column(name = "image_name")
+    private Set<String> images;
 }

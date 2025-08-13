@@ -1,0 +1,82 @@
+<div class="game-edit-container">
+  <h1>Редактирование игры: {{ game.name }} (ID: {{ gameId }})</h1>
+
+  <div *ngIf="isLoading" class="loading">
+    Загрузка данных игры...
+  </div>
+
+  <div *ngIf="error" class="error">
+    {{ error }}
+    <button (click)="error = null">×</button>
+  </div>
+
+  <form *ngIf="!isLoading" (ngSubmit)="onSubmit()" class="game-form">
+    <div class="form-group">
+      <label>Название:</label>
+      <input type="text" [(ngModel)]="game.name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label>Описание:</label>
+      <textarea [(ngModel)]="game.context" name="context" rows="4"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Цена:</label>
+      <input type="number" [(ngModel)]="game.cost" name="cost" step="0.01" required>
+    </div>
+
+    <div class="form-group">
+      <label>Изображения:</label>
+
+      <!-- Отладочная информация -->
+      <div *ngIf="game.images && game.images.length > 0" class="debug-info">
+        <small>Количество изображений: {{ game.images.length }}</small>
+      </div>
+
+      <!-- Загрузка нового изображения -->
+      <div class="image-upload">
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" #fileInput>
+        <button type="button" (click)="uploadImage()" [disabled]="!selectedFile || isLoading">
+          {{ isLoading ? 'Загрузка...' : 'Загрузить изображение' }}
+        </button>
+        <span *ngIf="selectedFile" class="file-info">
+          Выбран файл: {{ selectedFile.name }} ({{ formatFileSize(selectedFile.size) }})
+        </span>
+      </div>
+
+      <div *ngIf="previewImage" class="image-preview">
+        <h4>Предпросмотр:</h4>
+        <img [src]="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px;">
+      </div>
+
+      <!-- Список существующих изображений -->
+      <div class="existing-images">
+        <h4>Текущие изображения ({{ game.images.length }}):</h4>
+        <div *ngIf="game.images.length === 0" class="no-images">
+          Нет загруженных изображений
+        </div>
+        <div class="image-list" *ngIf="game.images.length > 0">
+          <div *ngFor="let image of game.images; let i = index" class="image-item">
+            <img [src]="getImageUrl(image)"
+                 [alt]="'Image ' + (i + 1)"
+                 (error)="handleImageError($event)"
+                 style="max-width: 150px; max-height: 150px;">
+            <button type="button" (click)="deleteImage(image)"
+                    class="delete-btn" title="Удалить изображение"
+                    [disabled]="isLoading">
+              ×
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="isSaving">
+        {{ isSaving ? 'Сохранение...' : 'Сохранить изменения' }}
+      </button>
+      <button type="button" (click)="cancel()">Отмена</button>
+    </div>
+  </form>
+</div>

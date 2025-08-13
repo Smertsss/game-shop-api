@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -13,11 +14,13 @@ public class GameDto {
     private UUID id;
     private String name;
     private String context;
-    private float cost;
+    private Float cost;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate creationDate;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate updateDate;
+
+    private Set<String> images;
 }

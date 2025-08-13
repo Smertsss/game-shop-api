@@ -5,6 +5,7 @@ import { DataTableService } from '../../services/data-table.service';
 import { CommonModule } from '@angular/common';
 import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-games-data',
@@ -13,37 +14,58 @@ import { of } from 'rxjs';
   standalone: true,
   imports: [
     FormsModule,
-    DataTableComponent,
+    DataTableComponent, // Добавляем импорт компонента
     CommonModule
-    ]
+  ]
 })
 export class GamesDataComponent {
   gamesData: any[] = [];
-  //columns: string[] = ['ID', 'Название', 'Контекст', 'Цена', 'Дата создания', 'Дата обновления'];
   columns: string[] = ['id', 'name', 'context', 'cost', 'creationDate', 'updateDate'];
   isLoading = true;
   error: string | null = null;
 
-  constructor(private dataService: DataTableService) {}
+  constructor(
+    private dataService: DataTableService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    console.log('Starting to load games data from:', `${this.dataService.apiUrl}/games`);
+    this.loadGames();
+  }
 
+  loadGames() {
     this.dataService.getGames().pipe(
-        tap(data => {
-          this.gamesData = data.map(game => ({
-            ...game,
-            creationDate: new Date(game.creationDate).toLocaleDateString(),
-            updateDate: new Date(game.updateDate).toLocaleDateString()
-          }));
-          this.isLoading = false;
-        }),
-        catchError(error => {
-            console.error('Full error loading games data:', error);
-            this.error = error.message || 'Failed to load games data';
-            this.isLoading = false;
-            return of([]);
-        })
+      tap(data => {
+        this.gamesData = data.map(game => ({
+          ...game,
+          creationDate: new Date(game.creationDate).toLocaleDateString(),
+          updateDate: new Date(game.updateDate).toLocaleDateString()
+        }));
+        this.isLoading = false;
+      }),
+      catchError(error => {
+        console.error('Full error loading games data:', error);
+        this.error = error.message || 'Failed to load games data';
+        this.isLoading = false;
+        return of([]);
+      })
     ).subscribe();
+  }
+
+  onEdit(gameId: string) {
+    this.router.navigate(['/games/edit', gameId]);
+  }
+
+  onDelete(gameId: string) {
+    if (confirm('Вы уверены, что хотите удалить эту игру?')) {
+      this.dataService.deleteGame(gameId).subscribe({
+        next: () => {
+          this.loadGames();
+        },
+        error: (error) => {
+          console.error('Error deleting game:', error);
+        }
+      });
+    }
   }
 }

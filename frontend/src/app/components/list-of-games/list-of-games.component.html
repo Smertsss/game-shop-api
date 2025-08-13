@@ -2,11 +2,12 @@
   <div class="games-grid">
     <div class="game-card" *ngFor="let game of data">
       <div class="image">
-        <img *ngIf="game.image" [src]="game.image" [alt]="game.title">
-        <div *ngIf="!game.image" class="no-image">No image</div>
+        <!-- Отображаем первое изображение, если оно есть -->
+        <img *ngIf="hasImages(game)" [src]="getFirstImageUrl(game)" [alt]="game.title">
+        <div *ngIf="!hasImages(game)" class="no-image">No image</div>
       </div>
       <h3 class="title">{{ game.title }}</h3>
-      <p class="genre" *ngFor="let genre of game.genre"></p>
+      <p class="genre" *ngFor="let genre of game.genre">{{ genre }}</p>
     </div>
   </div>
 </div>
