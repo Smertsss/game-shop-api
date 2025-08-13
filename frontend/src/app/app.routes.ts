@@ -10,6 +10,7 @@ import { UsersDataComponent } from './components/users-data/users-data.component
 import { GamesDataComponent } from './components/games-data/games-data.component';
 import { CompaniesDataComponent } from './components/companies-data/companies-data.component';
 import { GenresDataComponent } from './components/genres-data/genres-data.component';
+import { GameEditComponent } from './components/game-edit/game-edit.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -20,6 +21,7 @@ export const routes: Routes = [
   { path: 'users-data', component: UsersDataComponent, canActivate: [AuthGuard] },
   { path: 'games-data', component: GamesDataComponent, canActivate: [AuthGuard] },
   { path: 'companies-data', component: CompaniesDataComponent, canActivate: [AuthGuard] },
+  { path: 'games/edit/:id', component: GameEditComponent, canActivate: [AuthGuard] },
   { path: 'genres-data', component: GenresDataComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/main-games', pathMatch: 'full' },
   { path: '**', redirectTo: '/main-games' }

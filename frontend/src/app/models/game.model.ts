@@ -46,6 +46,7 @@ export interface GamePreview {
   title: string;
   image?: string;
   genre: string[];
+  images?: string[];
 }
 
 export interface GameData {
@@ -55,4 +56,5 @@ export interface GameData {
   cost: number;
   creationDate: string;
   updateDate: string;
+  images?: string[];
 }

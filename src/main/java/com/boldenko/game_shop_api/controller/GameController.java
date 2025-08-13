@@ -3,12 +3,18 @@ package com.boldenko.game_shop_api.controller;
 import com.boldenko.game_shop_api.dto.GameDto;
 import com.boldenko.game_shop_api.service.GameServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(GameController.PATH_NAME)
@@ -34,5 +40,54 @@ public class GameController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<GameDto> getAllGame() {
         return gameService.getAllGame();
+    }
+
+    // Добавляем методы для работы с изображениями игр
+    @PostMapping("/{id}/images")
+    public ResponseEntity<String> uploadGameImage(
+            @PathVariable UUID id,
+            @RequestParam("file") MultipartFile file) {
+
+        log.info("Received image upload request for game ID: {}", id);
+        log.info("File details: name={}, size={}, content-type={}",
+                file.getOriginalFilename(), file.getSize(), file.getContentType());
+
+        try {
+            String fileName = gameService.addImageToGame(id, file);
+            log.info("Image uploaded successfully: {}", fileName);
+            return ResponseEntity.ok(fileName);
+        } catch (Exception e) {
+            log.error("Failed to upload image for game: {}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to upload image: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/images/multiple")
+    public ResponseEntity<Set<String>> uploadMultipleGameImages(
+            @PathVariable UUID id,
+            @RequestParam("files") MultipartFile[] files) {
+
+        Set<String> fileNames = gameService.addMultipleImagesToGame(id, files);
+        return ResponseEntity.ok(fileNames);
+    }
+
+    @DeleteMapping("/{id}/images/{fileName}")
+    public ResponseEntity<Void> deleteGameImage(
+            @PathVariable UUID id,
+            @PathVariable String fileName) {
+
+        gameService.removeImageFromGame(id, fileName);
+        return ResponseEntity.noContent().build();
+    }
+
+    // Метод для обновления игры (если его еще нет)
+    @PutMapping("/{id}")
+    public ResponseEntity<GameDto> updateGame(
+            @PathVariable UUID id,
+            @RequestBody GameDto gameDto) {
+
+        GameDto updatedGame = gameService.updateGame(id, gameDto);
+        return ResponseEntity.ok(updatedGame);
     }
 }

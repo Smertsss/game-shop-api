@@ -11,12 +11,23 @@ import { GamePreview } from '../../models/game.model';
   imports: [
     CommonModule,
     RouterModule
-    ]
+  ]
 })
 export class ListOfGamesComponent {
   @Input() data: GamePreview[] = [];
 
-  constructor(
-    public router: Router
-    ) {}
+  constructor(public router: Router) {}
+
+  // Метод для получения URL первого изображения игры
+  getFirstImageUrl(game: GamePreview): string {
+    if (game.images && game.images.length > 0) {
+      return `http://localhost:8080/api/images/Game/${game.images[0]}`;
+    }
+    return ''; // Возвращаем пустую строку, если изображений нет
+  }
+
+  // Проверка, есть ли у игры изображения
+  hasImages(game: GamePreview): boolean {
+    return !!(game.images && game.images.length > 0);
+  }
 }

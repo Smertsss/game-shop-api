@@ -8,27 +8,39 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GameServiceImpl implements GameService{
+public class GameServiceImpl implements GameService {
     private final DataMapper mapper;
     private final GameRepo gameRepo;
+    private final ImageStorageService imageStorageService;
 
     @Override
     @Transactional
     public UUID createGame(GameDto gameDto) {
-        Game game = gameRepo.save(mapper.toGame(gameDto));
+        Game game = mapper.toGame(gameDto);
+        game.setCreationDate(LocalDate.now());
+        game.setUpdateDate(LocalDate.now());
+
+        Game savedGame = gameRepo.save(game);
         log.info("Add Game: " + game.getName());
-        return game.getId();
+        return savedGame.getId();
     }
 
     @Override
     @Transactional
     public UUID createGame(Game game) {
+        game.setCreationDate(LocalDate.now());
+        game.setUpdateDate(LocalDate.now());
+
         UUID id = gameRepo.save(game).getId();
         log.info("Add Game: " + game.getName());
         return id;
@@ -37,40 +49,164 @@ public class GameServiceImpl implements GameService{
     @Override
     @Transactional(readOnly = true)
     public GameDto getGameById(UUID id) {
-        return mapper.toGameDto(gameRepo.findById(id).orElseThrow());
+        Game game = gameRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Game not found with id: " + id));
+        return mapper.toGameDto(game);
     }
 
     @Override
+    @Transactional
     public void deleteGameById(UUID id) {
-        String name = mapper.toGameDto(gameRepo.findById(id).orElseThrow()).getName();
+        Game game = gameRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Game not found with id: " + id));
+
+        // Удаляем связанные изображения
+        if (game.getImages() != null) {
+            for (String imageName : game.getImages()) {
+                try {
+                    imageStorageService.deleteImage("Game", imageName);
+                } catch (IOException e) {
+                    log.warn("Failed to delete image: {}", imageName, e);
+                }
+            }
+        }
+
+        String gameName = game.getName();
         gameRepo.deleteById(id);
-        log.info("Delete Game: " + name);
+        log.info("Delete Game: " + gameName);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<GameDto> getAllGame() {
         List<Game> games = gameRepo.findAll();
         log.info("Found {} games in database", games.size());
 
-        List<GameDto> result = new ArrayList<>();
+        return games.stream()
+                .map(game -> {
+                    GameDto dto = new GameDto();
+                    dto.setId(game.getId());
+                    dto.setName(game.getName());
+                    dto.setContext(game.getContext());
+                    dto.setCost(game.getCost());
+                    dto.setCreationDate(game.getCreationDate());
+                    dto.setUpdateDate(game.getUpdateDate());
+                    dto.setImages(game.getImages()); // Добавляем изображения
 
-        for (Game game : games) {
-            log.info("Processing game: ID={}, Name={}, CreationDate={}",
-                    game.getId(), game.getName(), game.getCreationDate());
+                    log.info("Created DTO for game: ID={}, Name={}", game.getId(), game.getName());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 
-            GameDto dto = new GameDto();
-            dto.setId(game.getId());
-            dto.setName(game.getName());
-            dto.setContext(game.getContext());
-            dto.setCost(game.getCost());
-            dto.setCreationDate(game.getCreationDate());
-            dto.setUpdateDate(game.getUpdateDate());
+    @Override
+    @Transactional
+    public GameDto updateGame(UUID id, GameDto gameDto) {
+        Game existingGame = gameRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Game not found with id: " + id));
 
-            log.info("Created DTO: {}", dto);
-            result.add(dto);
+        // Обновляем поля
+        if (gameDto.getName() != null) {
+            existingGame.setName(gameDto.getName());
         }
+        if (gameDto.getContext() != null) {
+            existingGame.setContext(gameDto.getContext());
+        }
+        if (gameDto.getCost() != null) {
+            existingGame.setCost(gameDto.getCost());
+        }
+        existingGame.setUpdateDate(LocalDate.now());
 
-        log.info("Returning {} game DTOs", result.size());
-        return result;
+        Game updatedGame = gameRepo.save(existingGame);
+        log.info("Updated game: {}", updatedGame.getName());
+
+        return mapper.toGameDto(updatedGame);
+    }
+
+    @Override
+    @Transactional
+    public String addImageToGame(UUID gameId, MultipartFile file) {
+        Game game = gameRepo.findById(gameId)
+                .orElseThrow(() -> new RuntimeException("Game not found with id: " + gameId));
+
+        try {
+            log.info("Adding image to game: {}", game.getName());
+            log.info("File details: name={}, size={} bytes", file.getOriginalFilename(), file.getSize());
+
+            MultipartFile[] files = {file};
+            Set<String> savedFileNames = imageStorageService.saveImages(files, "Game");
+
+            if (savedFileNames.isEmpty()) {
+                log.error("No files were saved");
+                throw new RuntimeException("Failed to save image");
+            }
+
+            String fileName = savedFileNames.iterator().next();
+            log.info("Image saved with name: {}", fileName);
+
+            // Инициализируем коллекцию если она null
+            if (game.getImages() == null) {
+                game.setImages(new HashSet<>());
+                log.info("Initialized images collection for game");
+            }
+
+            game.getImages().add(fileName);
+            gameRepo.save(game); // <-- Эта строка может не выполняться из-за транзакции
+
+            log.info("Added image to game: {}, total images: {}", game.getName(), game.getImages().size());
+            return fileName;
+
+        } catch (IOException e) {
+            log.error("Failed to store image for game: {}", gameId, e);
+            throw new RuntimeException("Failed to store image for game: " + gameId, e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void removeImageFromGame(UUID gameId, String fileName) {
+        Game game = gameRepo.findById(gameId)
+                .orElseThrow(() -> new RuntimeException("Game not found with id: " + gameId));
+
+        if (game.getImages() != null && game.getImages().contains(fileName)) {
+            try {
+                // Удаляем файл из файловой системы
+                imageStorageService.deleteImage("Game", fileName);
+
+                // Удаляем ссылку из entity
+                game.getImages().remove(fileName);
+                gameRepo.save(game);
+
+                log.info("Removed image from game: {}", game.getName());
+
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to delete image: " + fileName, e);
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public Set<String> addMultipleImagesToGame(UUID gameId, MultipartFile[] files) {
+        Game game = gameRepo.findById(gameId)
+                .orElseThrow(() -> new RuntimeException("Game not found with id: " + gameId));
+
+        try {
+            Set<String> savedFileNames = imageStorageService.saveImages(files, "Game");
+
+            // Инициализируем коллекцию если она null
+            if (game.getImages() == null) {
+                game.setImages(new HashSet<>());
+            }
+
+            game.getImages().addAll(savedFileNames);
+            gameRepo.save(game);
+
+            log.info("Added {} images to game: {}", savedFileNames.size(), game.getName());
+            return savedFileNames;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to store images for game: " + gameId, e);
+        }
     }
 }

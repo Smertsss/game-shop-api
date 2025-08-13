@@ -39,4 +39,12 @@ public class Company {
 
     @ManyToMany(mappedBy = "companies")
     private Set<Game> games;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "company_image",
+            joinColumns = @JoinColumn(name = "company_id")
+    )
+    @Column(name = "image_name")
+    private Set<String> images;
 }
