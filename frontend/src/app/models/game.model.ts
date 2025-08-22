@@ -44,8 +44,8 @@ export interface GameUpdateDto {
 export interface GamePreview {
   id: string;
   title: string;
-  image?: string;
-  genre: string[];
+  context: string;
+  cost: number;
   images?: string[];
 }
 

@@ -11,6 +11,7 @@ import { GamesDataComponent } from './components/games-data/games-data.component
 import { CompaniesDataComponent } from './components/companies-data/companies-data.component';
 import { GenresDataComponent } from './components/genres-data/genres-data.component';
 import { GameEditComponent } from './components/game-edit/game-edit.component';
+import { FreeGamesComponent } from './components/free-games/free-games.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -18,6 +19,7 @@ export const routes: Routes = [
   { path: 'new-game', component: NewGamesComponent },
   { path: 'update-games', component: UpdateGamesComponent },
   { path: 'top-games', component: TopGamesComponent },
+  { path: 'free-games', component: FreeGamesComponent },
   { path: 'users-data', component: UsersDataComponent, canActivate: [AuthGuard] },
   { path: 'games-data', component: GamesDataComponent, canActivate: [AuthGuard] },
   { path: 'companies-data', component: CompaniesDataComponent, canActivate: [AuthGuard] },

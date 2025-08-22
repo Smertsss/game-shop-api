@@ -51,7 +51,6 @@ public class GameController {
         return gameService.getAllGame();
     }
 
-    // Добавляем методы для работы с изображениями игр
     @PostMapping("/{id}/images")
     public ResponseEntity<String> uploadGameImage(
             @PathVariable UUID id,
@@ -90,7 +89,6 @@ public class GameController {
         return ResponseEntity.noContent().build();
     }
 
-    // Метод для обновления игры (если его еще нет)
     @PutMapping("/{id}")
     public ResponseEntity<GameDto> updateGame(
             @PathVariable UUID id,
@@ -98,5 +96,15 @@ public class GameController {
 
         GameDto updatedGame = gameService.updateGame(id, gameDto);
         return ResponseEntity.ok(updatedGame);
+    }
+
+    @GetMapping("/free")
+    public List<GameDto> getFreeGames() {
+        return gameService.getFreeGames();
+    }
+
+    @GetMapping("/top")
+    public List<GameDto> getTopGames() {
+        return gameService.getTopGames();
     }
 }

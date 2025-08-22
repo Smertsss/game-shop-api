@@ -52,7 +52,6 @@ public class GameServiceImpl implements GameService {
         Game game = gameRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Game not found with id: " + id));
 
-        // Используем mapper вместо ручного создания DTO
         GameDto gameDto = mapper.toGameDto(game);
 
         log.info("Retrieved game: ID={}, Name={}, Images={}",
@@ -98,7 +97,7 @@ public class GameServiceImpl implements GameService {
                     dto.setCost(game.getCost());
                     dto.setCreationDate(game.getCreationDate());
                     dto.setUpdateDate(game.getUpdateDate());
-                    dto.setImages(game.getImages()); // Добавляем изображения
+                    dto.setImages(game.getImages());
 
                     log.info("Created DTO for game: ID={}, Name={}", game.getId(), game.getName());
                     return dto;
@@ -151,14 +150,13 @@ public class GameServiceImpl implements GameService {
             String fileName = savedFileNames.iterator().next();
             log.info("Image saved with name: {}", fileName);
 
-            // Инициализируем коллекцию если она null
             if (game.getImages() == null) {
                 game.setImages(new HashSet<>());
                 log.info("Initialized images collection for game");
             }
 
             game.getImages().add(fileName);
-            gameRepo.save(game); // <-- Эта строка может не выполняться из-за транзакции
+            gameRepo.save(game);
 
             log.info("Added image to game: {}, total images: {}", game.getName(), game.getImages().size());
             return fileName;
@@ -177,10 +175,8 @@ public class GameServiceImpl implements GameService {
 
         if (game.getImages() != null && game.getImages().contains(fileName)) {
             try {
-                // Удаляем файл из файловой системы
                 imageStorageService.deleteImage("Game", fileName);
 
-                // Удаляем ссылку из entity
                 game.getImages().remove(fileName);
                 gameRepo.save(game);
 
@@ -201,7 +197,6 @@ public class GameServiceImpl implements GameService {
         try {
             Set<String> savedFileNames = imageStorageService.saveImages(files, "Game");
 
-            // Инициализируем коллекцию если она null
             if (game.getImages() == null) {
                 game.setImages(new HashSet<>());
             }
@@ -215,5 +210,53 @@ public class GameServiceImpl implements GameService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to store images for game: " + gameId, e);
         }
+    }
+
+    public List<GameDto> getFreeGames() {
+        List<Game> freeGames = gameRepo.findByCost(0f);
+        log.info("Found {} free games in database", freeGames.size());
+
+        return freeGames.stream()
+                .map(game -> {
+                    GameDto dto = new GameDto();
+                    dto.setId(game.getId());
+                    dto.setName(game.getName());
+                    dto.setContext(game.getContext());
+                    dto.setCost(game.getCost());
+                    dto.setCreationDate(game.getCreationDate());
+                    dto.setUpdateDate(game.getUpdateDate());
+                    dto.setImages(game.getImages());
+
+                    log.info("Created DTO for free game: ID={}, Name={}", game.getId(), game.getName());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<GameDto> getTopGames() {
+        List<Game> allGames = gameRepo.findAll();
+        log.info("Found {} games for top ranking", allGames.size());
+
+        return allGames.stream()
+                .sorted((g1, g2) -> Integer.compare(
+                        g2.getLikedByUsers() != null ? g2.getLikedByUsers().size() : 0,
+                        g1.getLikedByUsers() != null ? g1.getLikedByUsers().size() : 0
+                ))
+                .map(game -> {
+                    GameDto dto = new GameDto();
+                    dto.setId(game.getId());
+                    dto.setName(game.getName());
+                    dto.setContext(game.getContext());
+                    dto.setCost(game.getCost());
+                    dto.setCreationDate(game.getCreationDate());
+                    dto.setUpdateDate(game.getUpdateDate());
+                    dto.setImages(game.getImages());
+
+                    log.info("Created DTO for top game: ID={}, Name={}, Likes={}",
+                            game.getId(), game.getName(),
+                            game.getLikedByUsers() != null ? game.getLikedByUsers().size() : 0);
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 }

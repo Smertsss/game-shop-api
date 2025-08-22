@@ -16,7 +16,8 @@ export class ListOfGameService {
     return {
       id: gameData.id,
       title: gameData.name,
-      genre: [],
+      context: gameData.context,
+      cost: gameData.cost,
       images: gameData.images || []
     };
   }
@@ -55,6 +56,28 @@ export class ListOfGameService {
       tap(data => console.log('Updated games fetched:', data)),
       catchError(error => {
         console.error('Error fetching updated games:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  getFreeGames(): Observable<GamePreview[]> {
+    return this.http.get<GameData[]>(`${this.apiUrl}/games/free`).pipe(
+      map(gamesData => gamesData.map(this.convertToPreview)),
+      tap(data => console.log('Free games fetched:', data)),
+      catchError(error => {
+        console.error('Error fetching free games:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  getTopGames(): Observable<GamePreview[]> {
+    return this.http.get<GameData[]>(`${this.apiUrl}/games/top`).pipe(
+      map(gamesData => gamesData.map(this.convertToPreview)),
+      tap(data => console.log('Top games fetched:', data)),
+      catchError(error => {
+        console.error('Error fetching top games:', error);
         return throwError(() => error);
       })
     );

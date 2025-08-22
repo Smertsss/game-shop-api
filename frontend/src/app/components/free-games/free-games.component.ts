@@ -9,9 +9,9 @@ import { of } from 'rxjs';
 import { GamePreview } from '../../models/game.model';
 
 @Component({
-  selector: 'app-top-games',
-  templateUrl: './top-games.component.html',
-  styleUrl: './top-games.component.css',
+  selector: 'app-free-games',
+  templateUrl: './free-games.component.html',
+  styleUrl: './free-games.component.css',
   standalone: true,
   imports: [
     FormsModule,
@@ -19,7 +19,7 @@ import { GamePreview } from '../../models/game.model';
     CommonModule
   ]
 })
-export class TopGamesComponent {
+export class FreeGamesComponent {
   isLoading = true;
   error: string | null = null;
   games: GamePreview[] = [];
@@ -27,22 +27,22 @@ export class TopGamesComponent {
   constructor(private gameService: ListOfGameService) {}
 
   ngOnInit(): void {
-    this.loadTopGames();
+    this.loadFreeGames();
   }
 
-  loadTopGames(): void {
+  loadFreeGames(): void {
     this.isLoading = true;
     this.error = null;
 
-    this.gameService.getTopGames().pipe(
+    this.gameService.getFreeGames().pipe(
       tap(games => {
         this.games = games;
         this.isLoading = false;
       }),
       catchError(error => {
-        this.error = 'Ошибка загрузки топовых игр';
+        this.error = 'Ошибка загрузки бесплатных игр';
         this.isLoading = false;
-        console.error('Error loading top games:', error);
+        console.error('Error loading free games:', error);
         return of([]);
       })
     ).subscribe();

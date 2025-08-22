@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #000C1A;
+  color: white;
+}
+
+.site-header {
+  padding: 1rem 0;
+  text-align: left;
+  margin-left: 25px;
+}
+
+.site-title {
+  font-family: 'Jaro', sans-serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: #3394BE;
+  margin: 0;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: uppercase;
+}
