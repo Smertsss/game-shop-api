@@ -21,6 +21,11 @@ public class UserController {
         return userService.createUser(userDto);
     }
 
+    @PostMapping("/register")
+    public UUID registerUser(@RequestBody UserDto userDto) {
+        return userService.createUser(userDto);
+    }
+
     @GetMapping("/{id}")
     public UserDto getUserById(@PathVariable UUID id) {
         return userService.getUserById(id);

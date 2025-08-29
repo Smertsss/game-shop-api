@@ -13,8 +13,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -40,8 +42,27 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     @Transactional
     public UUID createUser(UserDto userDto) {
+        Optional<User> existingUserByEmail = userRepo.findByEmail(userDto.getEmail());
+        if (existingUserByEmail.isPresent()) {
+            throw new RuntimeException("Пользователь с таким email уже существует");
+        }
+
+        Optional<User> existingUserByLogin = userRepo.findByLogin(userDto.getLogin());
+        if (existingUserByLogin.isPresent()) {
+            throw new RuntimeException("Пользователь с таким логином уже существует");
+        }
+
+        Optional<User> existingUserByUsername = userRepo.findByUsername(userDto.getUsername());
+        if (existingUserByUsername.isPresent()) {
+            throw new RuntimeException("Пользователь с таким именем пользователя уже существует");
+        }
+
         User user = mapper.toUser(userDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setCreationDate(LocalDate.now());
+        user.setLastLoginDate(LocalDate.now());
+        user.setOnline(true);
+
         UUID id = userRepo.save(user).getId();
         log.info("Add User: " + user.getUsername());
         return id;
@@ -51,6 +72,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Transactional
     public UUID createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setCreationDate(LocalDate.now());
+        user.setLastLoginDate(LocalDate.now());
+        user.setOnline(true);
+
         UUID id = userRepo.save(user).getId();
         log.info("Add User: " + user.getUsername());
         return id;

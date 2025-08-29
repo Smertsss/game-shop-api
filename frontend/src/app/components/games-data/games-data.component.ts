@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [
     FormsModule,
-    DataTableComponent, // Добавляем импорт компонента
+    DataTableComponent,
     CommonModule
   ]
 })

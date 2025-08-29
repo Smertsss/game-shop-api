@@ -10,4 +10,7 @@ import java.util.UUID;
 public interface UserRepo extends JpaRepository<User, UUID> {
     @Query("SELECT u FROM User u WHERE u.email = :identifier OR u.login = :identifier")
     Optional<User> findByIdentifier(String identifier);
+    Optional<User> findByEmail(String email);
+    Optional<User> findByLogin(String login);
+    Optional<User> findByUsername(String username);
 }

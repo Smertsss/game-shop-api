@@ -13,8 +13,13 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  createUser(user: UserCreateDto): Observable<User> {
-    return this.http.post<User>(this.apiUrl, user);
+  createUser(user: UserCreateDto): Observable<any> {
+    return this.http.post(`${this.apiUrl}`, user).pipe(
+      catchError((error: any) => {
+        console.error('Create user error:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   getUserById(id: string): Observable<User> {
@@ -61,6 +66,10 @@ export class UserService {
         return throwError(() => error);
       })
     );
+  }
+
+  register(userData: UserCreateDto): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, userData);
   }
 
   logout(): Observable<void> {

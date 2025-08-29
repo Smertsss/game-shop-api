@@ -7,28 +7,27 @@
   </button>
 
   <div class="login-card">
-    <h2>Вход в систему</h2>
+    <h2>ВОЙТИ В GAMESHOP</h2>
 
     <div *ngIf="errorMessage" class="error-message">
       {{ errorMessage }}
     </div>
 
     <form (ngSubmit)="onLogin()" class="login-form">
-
       <div class="form-group">
-        <label for="username">Email или логин</label>
+        <label for="username">Введите электронную почту или логин</label>
         <input
           type="text"
           id="username"
           name="username"
           [(ngModel)]="credentials.username"
           required
-          placeholder="Введите email или логин"
+          placeholder="Введите email"
         >
       </div>
 
       <div class="form-group">
-        <label for="password">Пароль</label>
+        <label for="password">Введите пароль</label>
         <input
           type="password"
           id="password"
@@ -39,12 +38,27 @@
         >
       </div>
 
-      <button type="submit" class="login-button">Войти</button>
+      <button type="submit" class="login-button">ПРОДОЛЖИТЬ</button>
     </form>
 
     <div class="alternative-actions">
-      <p>Нет аккаунта? <a (click)="navigateToRegister()">Зарегистрируйтесь</a></p>
-      <p><a href="#">Забыли пароль?</a></p>
+      <p>Еще нет учётной записи? <a (click)="navigateToRegister()">Создать учетную запись</a></p>
+    </div>
+
+    <div class="social-login">
+      <p>Другие способы входа</p>
+      <div class="social-buttons">
+        <button class="social-button">ВКонтакте</button>
+        <button class="social-button">Google</button>
+      </div>
+    </div>
+
+    <div class="alternative-actions">
+      <p><a href="/">Проблемы со входом?</a></p>
+    </div>
+
+    <div class="privacy-link">
+      <a href="/">Политика конфиденциальности</a>
     </div>
   </div>
 </div>
