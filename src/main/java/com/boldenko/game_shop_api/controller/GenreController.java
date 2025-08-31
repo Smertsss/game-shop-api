@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -34,5 +35,10 @@ public class GenreController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<GenreDto> getAllGenre() {
         return genreService.getAllGenre();
+    }
+
+    @GetMapping("/data")
+    public List<Map<String, Object>> getAllGenreData() {
+        return genreService.getAllGenreData();
     }
 }

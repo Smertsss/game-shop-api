@@ -1,5 +1,6 @@
 package com.boldenko.game_shop_api.service;
 
+import com.boldenko.game_shop_api.dto.CompanyDto;
 import com.boldenko.game_shop_api.dto.UserDto;
 import com.boldenko.game_shop_api.entity.User;
 import com.boldenko.game_shop_api.mapper.DataMapper;
@@ -14,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -95,33 +93,68 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> getAllUser() {
         List<User> users = userRepo.findAll();
         log.info("Found {} users in database", users.size());
 
-        List<UserDto> result = new ArrayList<>();
+        return users.stream()
+                .map(user -> {
+                    UserDto dto = new UserDto();
 
-        for (User user : users) {
-            log.info("Processing game: ID={}, Username={}, CreationDate={}",
-                    user.getId(), user.getUsername(), user.getCreationDate());
+                    dto.setId(user.getId());
+                    dto.setFirstName(user.getFirstName());
+                    dto.setSecondName(user.getSecondName());
+                    dto.setUsername(user.getUsername());
+                    dto.setEmail(user.getEmail());
+                    dto.setCreationDate(user.getCreationDate());
+                    dto.setLastLoginDate(user.getLastLoginDate());
+                    dto.setOnline(user.isOnline());
 
-            UserDto dto = new UserDto();
-            dto.setId(user.getId());
-            dto.setFirstName(user.getFirstName());
-            dto.setSecondName(user.getSecondName());
-            dto.setUsername(user.getUsername());
-            dto.setEmail(user.getEmail());
-            dto.setLogin(user.getLogin());
-            dto.setPassword(user.getPassword());
-            dto.setCreationDate(user.getCreationDate());
-            dto.setLastLoginDate(user.getLastLoginDate());
-            dto.setOnline(user.isOnline());
+                    log.info("Created DTO for user: ID={}, Name={}", user.getId(), user.getUsername());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 
-            log.info("Created DTO: {}", dto);
-            result.add(dto);
-        }
 
-        log.info("Returning {} user DTOs", result.size());
-        return result;
+    @Override
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> getAllUserData() {
+        List<User> users = userRepo.findAll();
+        log.info("Found {} users in database for data table", users.size());
+
+        return users.stream()
+                .map(user -> {
+                    Map<String, Object> userData = new LinkedHashMap<>();
+
+                    userData.put("id", user.getId().toString());
+                    userData.put("firstName", user.getFirstName());
+                    userData.put("secondName", user.getSecondName());
+                    userData.put("username", user.getUsername());
+                    userData.put("email", user.getEmail());
+                    userData.put("creationDate", user.getCreationDate());
+                    userData.put("lastLoginDate", user.getLastLoginDate());
+                    userData.put("online", user.isOnline());
+
+                    userData.put("games", user.getGames() != null ? user.getGames().size() : 0);
+                    userData.put("likedGames", user.getLikedGames() != null ? user.getLikedGames().size() : 0);
+                    userData.put("dislikedGames", user.getDislikedGames() != null ? user.getDislikedGames().size() : 0);
+                    userData.put("roles", user.getRoles() != null ? user.getRoles().size() : 0);
+                    userData.put("companies", user.getCompanies() != null ? user.getCompanies().size() : 0);
+                    userData.put("images", user.getImages() != null ? user.getImages().size() : 0);
+
+                    log.info("Created data for user: {}, games: {}, likedGames: {}, dislikedGames: {}, " +
+                                    "roles: {}, companies: {}, images: {}",
+                            user.getUsername(),
+                            user.getGames() != null ? user.getGames().size() : 0,
+                            user.getLikedGames() != null ? user.getLikedGames().size() : 0,
+                            user.getDislikedGames() != null ? user.getDislikedGames().size() : 0,
+                            user.getRoles() != null ? user.getRoles().size() : 0,
+                            user.getCompanies() != null ? user.getCompanies().size() : 0,
+                            user.getImages() != null ? user.getImages().size() : 0);
+                    return userData;
+                })
+                .collect(Collectors.toList());
     }
 }

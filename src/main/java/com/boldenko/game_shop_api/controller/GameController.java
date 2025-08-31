@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -49,6 +50,11 @@ public class GameController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<GameDto> getAllGame() {
         return gameService.getAllGame();
+    }
+
+    @GetMapping("/data")
+    public List<Map<String, Object>> getAllGameData() {
+        return gameService.getAllGameData();
     }
 
     @PostMapping("/{id}/images")

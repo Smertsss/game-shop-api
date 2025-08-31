@@ -4,6 +4,7 @@ import com.boldenko.game_shop_api.dto.GenreDto;
 import com.boldenko.game_shop_api.entity.Genre;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface GenreService {
@@ -12,4 +13,5 @@ public interface GenreService {
     GenreDto getGenreById(UUID id);
     void deleteGenreById(UUID id);
     List<GenreDto> getAllGenre();
+    List<Map<String, Object>> getAllGenreData();
 }

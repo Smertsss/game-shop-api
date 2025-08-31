@@ -2,6 +2,7 @@ package com.boldenko.game_shop_api.service;
 
 import com.boldenko.game_shop_api.dto.CompanyDto;
 import com.boldenko.game_shop_api.entity.Company;
+import com.boldenko.game_shop_api.entity.Game;
 import com.boldenko.game_shop_api.mapper.DataMapper;
 import com.boldenko.game_shop_api.repository.CompanyRepo;
 import lombok.RequiredArgsConstructor;
@@ -9,9 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -50,27 +50,51 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CompanyDto> getAllCompany() {
         List<Company> companies = companyRepo.findAll();
         log.info("Found {} companies in database", companies.size());
 
-        List<CompanyDto> result = new ArrayList<>();
+        return companies.stream()
+                .map(company -> {
+                        CompanyDto dto = new CompanyDto();
+                        dto.setId(company.getId());
+                        dto.setName(company.getName());
+                        dto.setContext(company.getContext());
+                        dto.setCreationDate(company.getCreationDate());
 
-        for (Company company : companies) {
-            log.info("Processing company: ID={}, Name={}, CreationDate={}",
-                    company.getId(), company.getName(), company.getCreationDate());
+                        log.info("Created DTO for company: ID={}, Name={}", company.getId(), company.getName());
+                        return dto;
+                    })
+                .collect(Collectors.toList());
+    }
 
-            CompanyDto dto = new CompanyDto();
-            dto.setId(company.getId());
-            dto.setName(company.getName());
-            dto.setContext(company.getContext());
-            dto.setCreationDate(company.getCreationDate());
+    @Override
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> getAllCompanyData() {
+        List<Company> companies = companyRepo.findAll();
+        log.info("Found {} companies in database for data table", companies.size());
 
-            log.info("Created DTO: {}", dto);
-            result.add(dto);
-        }
+        return companies.stream()
+                .map(company -> {
+                    Map<String, Object> companyData = new LinkedHashMap<>();
 
-        log.info("Returning {} company DTOs", result.size());
-        return result;
+                    companyData.put("id", company.getId().toString());
+                    companyData.put("name", company.getName());
+                    companyData.put("context", company.getContext());
+                    companyData.put("creationDate", company.getCreationDate());
+
+                    companyData.put("users", company.getUsers() != null ? company.getUsers().size() : 0);
+                    companyData.put("games", company.getGames() != null ? company.getGames().size() : 0);
+                    companyData.put("images", company.getImages() != null ? company.getImages().size() : 0);
+
+                    log.info("Created data for company: {}, users: {}, games: {}, images: {}",
+                            company.getName(),
+                            company.getUsers() != null ? company.getUsers().size() : 0,
+                            company.getGames() != null ? company.getGames().size() : 0,
+                            company.getImages() != null ? company.getImages().size() : 0);
+                    return companyData;
+                })
+                .collect(Collectors.toList());
     }
 }

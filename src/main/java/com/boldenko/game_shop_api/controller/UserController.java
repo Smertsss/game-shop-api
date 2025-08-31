@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -39,5 +40,10 @@ public class UserController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<UserDto> getAllUser() {
         return userService.getAllUser();
+    }
+
+    @GetMapping("/data")
+    public List<Map<String, Object>> getAllUserData() {
+        return userService.getAllUserData();
     }
 }

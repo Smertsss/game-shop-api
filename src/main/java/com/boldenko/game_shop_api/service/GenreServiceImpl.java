@@ -1,6 +1,8 @@
 package com.boldenko.game_shop_api.service;
 
+import com.boldenko.game_shop_api.dto.CompanyDto;
 import com.boldenko.game_shop_api.dto.GenreDto;
+import com.boldenko.game_shop_api.entity.Company;
 import com.boldenko.game_shop_api.entity.Genre;
 import com.boldenko.game_shop_api.mapper.DataMapper;
 import com.boldenko.game_shop_api.repository.GenreRepo;
@@ -9,9 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -54,21 +55,38 @@ public class GenreServiceImpl implements GenreService{
         List<Genre> genres = genreRepo.findAll();
         log.info("Found {} genres in database", genres.size());
 
-        List<GenreDto> result = new ArrayList<>();
+        return genres.stream()
+                .map(genre -> {
+                    GenreDto dto = new GenreDto();
+                    dto.setId(genre.getId());
+                    dto.setName(genre.getName());
 
-        for (Genre genre : genres) {
-            log.info("Processing game: ID={}, Name={}",
-                    genre.getId(), genre.getName());
+                    log.info("Created DTO for genre: ID={}, Name={}", genre.getId(), genre.getName());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 
-            GenreDto dto = new GenreDto();
-            dto.setId(genre.getId());
-            dto.setName(genre.getName());
+    @Override
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> getAllGenreData() {
+        List<Genre> genres = genreRepo.findAll();
+        log.info("Found {} genres in database for data table", genres.size());
 
-            log.info("Created DTO: {}", dto);
-            result.add(dto);
-        }
+        return genres.stream()
+                .map(genre -> {
+                    Map<String, Object> genreData = new LinkedHashMap<>();
 
-        log.info("Returning {} genre DTOs", result.size());
-        return result;
+                    genreData.put("id", genre.getId().toString());
+                    genreData.put("name", genre.getName());
+
+                    genreData.put("games", genre.getGames() != null ? genre.getGames().size() : 0);
+
+                    log.info("Created data for genre: {}, games: {}",
+                            genre.getName(),
+                            genre.getGames() != null ? genre.getGames().size() : 0);
+                    return genreData;
+                })
+                .collect(Collectors.toList());
     }
 }

@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
 })
 export class GamesDataComponent {
   gamesData: any[] = [];
-  columns: string[] = ['id', 'name', 'context', 'cost', 'creationDate', 'updateDate'];
+  columns: string[] = ['name', 'context', 'cost', 'creationDate', 'updateDate', 'users', 'likedByUsers', 'dislikedByUsers', 'companies', 'genres', 'images'];
   isLoading = true;
   error: string | null = null;
 
@@ -34,12 +34,18 @@ export class GamesDataComponent {
   }
 
   loadGames() {
-    this.dataService.getGames().pipe(
+    this.dataService.getGamesData().pipe(
       tap(data => {
         this.gamesData = data.map(game => ({
           ...game,
           creationDate: new Date(game.creationDate).toLocaleDateString(),
-          updateDate: new Date(game.updateDate).toLocaleDateString()
+          updateDate: new Date(game.updateDate).toLocaleDateString(),
+          users: game.users?.toString() || '0',
+          likedByUsers: game.likedByUsers?.toString() || '0',
+          dislikedByUsers: game.dislikedByUsers?.toString() || '0',
+          companies: game.companies?.toString() || '0',
+          genres: game.genres?.toString() || '0',
+          images: game.images?.toString() || '0'
         }));
         this.isLoading = false;
       }),

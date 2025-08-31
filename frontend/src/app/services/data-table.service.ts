@@ -11,47 +11,20 @@ export class DataTableService {
 
   constructor(private http: HttpClient) { }
 
-  getGames(): Observable<any[]> {
-      return this.http.get<any[]>(`${this.apiUrl}/games`).pipe(
-          tap(data => console.log('Games data fetched successfully:', data)),
-          catchError(error => {
-              console.error('Error fetching games:', error);
-              return throwError(() => error);
-          })
-      );
+  getGamesData() {
+    return this.http.get<any[]>('/api/games/data');
   }
 
-  getGenres(): Observable<any[]> {
-    console.log('Fetching genres data from API...');
-    return this.http.get<any[]>(`${this.apiUrl}/genres`).pipe(
-      tap(() => console.log('Genres data fetched successfully')),
-      catchError(error => {
-          console.error('Error fetching games:', error);
-          return throwError(() => error);
-      })
-    );
+  getGenresData() {
+    return this.http.get<any[]>('/api/genres/data');
   }
 
-  getUsers(): Observable<any[]> {
-    console.log('Fetching users data from API...');
-    return this.http.get<any[]>(`${this.apiUrl}/clients`).pipe(
-      tap(() => console.log('Users data fetched successfully')),
-      catchError(error => {
-         console.error('Error fetching games:', error);
-         return throwError(() => error);
-      })
-    );
+  getUsersData(): Observable<any[]> {
+    return this.http.get<any[]>('/api/clients/data');
   }
 
-  getCompanies(): Observable<any[]> {
-    console.log('Fetching companies data from API...');
-    return this.http.get<any[]>(`${this.apiUrl}/companies`).pipe(
-      tap(() => console.log('Companies data fetched successfully')),
-      catchError(error => {
-         console.error('Error fetching games:', error);
-         return throwError(() => error);
-      })
-    );
+  getCompaniesData(): Observable<any[]> {
+    return this.http.get<any[]>('/api/companies/data');
   }
 
   getGameById(id: string): Observable<any> {
@@ -76,6 +49,32 @@ export class DataTableService {
     return this.http.delete<void>(`${this.apiUrl}/games/${id}`).pipe(
       catchError(error => {
         console.error('Error deleting game:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  deleteGenre(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/genres/${id}`).pipe(
+      catchError(error => {
+        console.error('Error deleting genre:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+  deleteUser(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/clients/${id}`).pipe(
+      catchError(error => {
+        console.error('Error deleting user:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  deleteCompany(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/companies/${id}`).pipe(
+      catchError(error => {
+        console.error('Error deleting company:', error);
         return throwError(() => error);
       })
     );

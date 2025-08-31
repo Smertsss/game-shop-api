@@ -5,6 +5,7 @@ import com.boldenko.game_shop_api.entity.Game;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -14,6 +15,7 @@ public interface GameService {
     GameDto getGameById(UUID id);
     void deleteGameById(UUID id);
     List<GameDto> getAllGame();
+    List<Map<String, Object>> getAllGameData();
     GameDto updateGame(UUID id, GameDto gameDto);
     String addImageToGame(UUID gameId, MultipartFile file);
     void removeImageFromGame(UUID gameId, String fileName);

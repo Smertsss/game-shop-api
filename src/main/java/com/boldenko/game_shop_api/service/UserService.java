@@ -4,6 +4,7 @@ import com.boldenko.game_shop_api.dto.UserDto;
 import com.boldenko.game_shop_api.entity.User;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface UserService {
@@ -12,4 +13,5 @@ public interface UserService {
     UserDto getUserById(UUID id);
     void deleteUserById(UUID id);
     List<UserDto> getAllUser();
+    List<Map<String, Object>> getAllUserData();
 }

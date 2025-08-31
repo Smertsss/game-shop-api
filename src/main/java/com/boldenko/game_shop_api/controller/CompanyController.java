@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -37,4 +38,8 @@ public class CompanyController {
         return companyService.getAllCompany();
     }
 
+    @GetMapping("/data")
+    public List<Map<String, Object>> getAllCompanyData() {
+        return companyService.getAllCompanyData();
+    }
 }

@@ -106,12 +106,49 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> getAllGameData() {
+        List<Game> games = gameRepo.findAll();
+        log.info("Found {} games in database for data table", games.size());
+
+        return games.stream()
+                .map(game -> {
+                    Map<String, Object> gameData = new LinkedHashMap<>();
+
+                    gameData.put("id", game.getId().toString());
+                    gameData.put("name", game.getName());
+                    gameData.put("context", game.getContext());
+                    gameData.put("cost", game.getCost());
+                    gameData.put("creationDate", game.getCreationDate());
+                    gameData.put("updateDate", game.getUpdateDate());
+
+                    gameData.put("users", game.getUsers() != null ? game.getUsers().size() : 0);
+                    gameData.put("likedByUsers", game.getLikedByUsers() != null ? game.getLikedByUsers().size() : 0);
+                    gameData.put("dislikedByUsers", game.getDislikedByUsers() != null ? game.getDislikedByUsers().size() : 0);
+                    gameData.put("companies", game.getCompanies() != null ? game.getCompanies().size() : 0);
+                    gameData.put("genres", game.getGenres() != null ? game.getGenres().size() : 0);
+                    gameData.put("images", game.getImages() != null ? game.getImages().size() : 0);
+
+                    log.info("Created data for game: {}, users: {}, liked: {}, disliked: {}, companies: {}, genres: {}, images: {}",
+                            game.getName(),
+                            game.getUsers() != null ? game.getUsers().size() : 0,
+                            game.getLikedByUsers() != null ? game.getLikedByUsers().size() : 0,
+                            game.getDislikedByUsers() != null ? game.getDislikedByUsers().size() : 0,
+                            game.getCompanies() != null ? game.getCompanies().size() : 0,
+                            game.getGenres() != null ? game.getGenres().size() : 0,
+                            game.getImages() != null ? game.getImages().size() : 0);
+
+                    return gameData;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public GameDto updateGame(UUID id, GameDto gameDto) {
         Game existingGame = gameRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Game not found with id: " + id));
 
-        // Обновляем поля
         if (gameDto.getName() != null) {
             existingGame.setName(gameDto.getName());
         }
