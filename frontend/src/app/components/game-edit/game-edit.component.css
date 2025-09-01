@@ -93,3 +93,64 @@
   background: #6c757d;
   color: white;
 }
+
+.genre-add {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.genre-select {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  flex: 1;
+}
+
+.current-genres {
+  margin-top: 15px;
+}
+
+.genre-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.genre-item {
+  position: relative;
+  background-color: #343437;
+  padding: 8px 15px;
+  border-radius: 20px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.genre-name {
+  font-size: 0.9em;
+}
+
+.genre-item .delete-btn {
+  position: static;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-genres {
+  color: #6c757d;
+  font-style: italic;
+  margin-top: 10px;
+}

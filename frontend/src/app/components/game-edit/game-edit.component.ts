@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataTableService } from '../../services/data-table.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { GameService } from '../../services/game.service';
+import { GameUpdateDto } from '../../models/game.model';
 
 @Component({
   selector: 'app-game-edit',
@@ -18,7 +19,8 @@ export class GameEditComponent implements OnInit {
     name: '',
     context: '',
     cost: 0,
-    images: []
+    images: [],
+    genres: []
   };
 
   gameId: string = '';
@@ -28,16 +30,21 @@ export class GameEditComponent implements OnInit {
   selectedFile: File | null = null;
   previewImage: string | null = null;
 
+  // Для работы с жанрами
+  allGenres: any[] = [];
+  selectedGenreId: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private dataService: DataTableService
+    private gameService: GameService
   ) {}
 
   ngOnInit() {
     this.gameId = this.route.snapshot.paramMap.get('id') || '';
     if (this.gameId) {
       this.loadGame(this.gameId);
+      this.loadAllGenres();
     } else {
       this.error = 'ID игры не указан';
       this.isLoading = false;
@@ -46,7 +53,7 @@ export class GameEditComponent implements OnInit {
 
   loadGame(id: string) {
     console.log('Loading game with ID:', id);
-    this.dataService.getGameById(id).pipe(
+    this.gameService.getGameById(id).pipe(
       catchError(error => {
         console.error('Error loading game:', error);
         this.error = 'Ошибка загрузки игры';
@@ -57,10 +64,12 @@ export class GameEditComponent implements OnInit {
       if (game) {
         console.log('Game loaded:', game);
         console.log('Game images:', game.images);
+        console.log('Game genres:', game.genres);
 
         this.game = {
           ...game,
-          images: game.images || [] // Убедимся, что images всегда массив
+          images: game.images || [],
+          genres: game.genres || []
         };
 
         console.log('Processed game:', this.game);
@@ -68,6 +77,17 @@ export class GameEditComponent implements OnInit {
         console.error('Game is null');
       }
       this.isLoading = false;
+    });
+  }
+
+  loadAllGenres() {
+    this.gameService.getAllGenres().pipe(
+      catchError(error => {
+        console.error('Error loading genres:', error);
+        return of([]);
+      })
+    ).subscribe(genres => {
+      this.allGenres = genres;
     });
   }
 
@@ -100,7 +120,7 @@ export class GameEditComponent implements OnInit {
 
       this.isLoading = true;
 
-      this.dataService.uploadGameImage(this.gameId, this.selectedFile).subscribe({
+      this.gameService.uploadGameImage(this.gameId, this.selectedFile).subscribe({
         next: (imageName) => {
           console.log('Изображение успешно загружено:', imageName);
           this.loadGame(this.gameId);
@@ -124,8 +144,8 @@ export class GameEditComponent implements OnInit {
   deleteImage(imageName: string) {
     if (this.gameId) {
       if (confirm('Удалить это изображение?')) {
-        this.isLoading = true; // Показываем индикатор загрузки
-        this.dataService.deleteGameImage(this.gameId, imageName).subscribe({
+        this.isLoading = true;
+        this.gameService.deleteGameImage(this.gameId, imageName).subscribe({
           next: () => {
             // Обновляем локальный список изображений
             this.game.images = this.game.images.filter((img: string) => img !== imageName);
@@ -141,6 +161,41 @@ export class GameEditComponent implements OnInit {
     }
   }
 
+  addGenre() {
+    if (this.selectedGenreId && !this.game.genres.some((g: any) => g.id === this.selectedGenreId)) {
+      this.isLoading = true;
+      this.gameService.addGenresToGame(this.gameId, [this.selectedGenreId]).subscribe({
+        next: (updatedGame) => {
+          this.game.genres = updatedGame.genres || [];
+          this.selectedGenreId = '';
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error adding genre:', error);
+          this.error = 'Ошибка добавления жанра';
+          this.isLoading = false;
+        }
+      });
+    }
+  }
+
+  removeGenre(genreId: string) {
+    if (confirm('Удалить этот жанр из игры?')) {
+      this.isLoading = true;
+      this.gameService.removeGenreFromGame(this.gameId, genreId).subscribe({
+        next: (updatedGame) => {
+          this.game.genres = updatedGame.genres || [];
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error removing genre:', error);
+          this.error = 'Ошибка удаления жанра';
+          this.isLoading = false;
+        }
+      });
+    }
+  }
+
   onSubmit() {
     if (!this.gameId) {
       this.error = 'ID игры не указан';
@@ -150,14 +205,14 @@ export class GameEditComponent implements OnInit {
     this.isSaving = true;
     this.error = null;
 
-    // Подготавливаем данные для отправки (только изменяемые поля)
-    const updateData = {
+    const updateData: GameUpdateDto = {
+      id: this.gameId,
       name: this.game.name,
       context: this.game.context,
       cost: this.game.cost
     };
 
-    this.dataService.updateGame(this.gameId, updateData).subscribe({
+    this.gameService.updateGame(this.gameId, updateData).subscribe({
       next: () => {
         this.router.navigate(['/games']);
       },
@@ -173,18 +228,15 @@ export class GameEditComponent implements OnInit {
     this.router.navigate(['/games']);
   }
 
-  // Метод для получения URL изображения
   getImageUrl(imageName: string): string {
     return `http://localhost:8080/api/images/Game/${imageName}`;
   }
 
-  // Обработчик ошибок загрузки изображений
   handleImageError(event: any) {
     console.error('Ошибка загрузки изображения', event);
-    event.target.style.display = 'none'; // Скрываем сломанное изображение
+    event.target.style.display = 'none';
   }
 
-  // Метод для форматирования размера файла
   formatFileSize(bytes: number): string {
     if (bytes === 0) return '0 Bytes';
 
@@ -193,5 +245,10 @@ export class GameEditComponent implements OnInit {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  // Безопасный доступ к свойствам (как в game-view)
+  safeGet<T>(value: T | undefined | null, defaultValue: T): T {
+    return value !== undefined && value !== null ? value : defaultValue;
   }
 }

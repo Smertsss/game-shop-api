@@ -30,6 +30,6 @@ export class ListOfGamesComponent {
   }
 
   navigateToGame(game: GamePreview): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/games/view', game.id]);
   }
 }

@@ -1,11 +1,13 @@
 package com.boldenko.game_shop_api.service;
 
 import com.boldenko.game_shop_api.dto.GameDto;
+import com.boldenko.game_shop_api.dto.GenreDto;
 import com.boldenko.game_shop_api.entity.Game;
 import com.boldenko.game_shop_api.mapper.DataMapper;
 import com.boldenko.game_shop_api.repository.GameRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,11 +52,36 @@ public class GameServiceImpl implements GameService {
     @Transactional(readOnly = true)
     public GameDto getGameById(UUID id) {
         Game game = gameRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Game not found with id: " + id));
+                .orElseThrow(() -> {
+                    log.error("Game not found with id: {}", id);
+                    return new RuntimeException("Game not found with id: " + id);
+                });
 
-        GameDto gameDto = mapper.toGameDto(game);
+        log.info("Found game: ID={}, Name={}, Images={}",
+                game.getId(), game.getName(), game.getImages());
 
-        log.info("Retrieved game: ID={}, Name={}, Images={}",
+        GameDto gameDto = new GameDto();
+        gameDto.setId(game.getId());
+        gameDto.setName(game.getName());
+        gameDto.setContext(game.getContext());
+        gameDto.setCost(game.getCost());
+        gameDto.setCreationDate(game.getCreationDate());
+        gameDto.setUpdateDate(game.getUpdateDate());
+        gameDto.setImages(game.getImages());
+
+        // Если нужно маппить связанные сущности
+        if (game.getGenres() != null) {
+            gameDto.setGenres(game.getGenres().stream()
+                    .map(genre -> {
+                        GenreDto genreDto = new GenreDto();
+                        genreDto.setId(genre.getId());
+                        genreDto.setName(genre.getName());
+                        return genreDto;
+                    })
+                    .collect(Collectors.toSet()));
+        }
+
+        log.info("Mapped to DTO: ID={}, Name={}, Images={}",
                 gameDto.getId(), gameDto.getName(), gameDto.getImages());
 
         return gameDto;

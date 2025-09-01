@@ -23,4 +23,8 @@ public class GameDto {
     private LocalDate updateDate;
 
     private Set<String> images;
+
+    private Set<GenreDto> genres;
+    private Set<UserDto> likedByUsers;
+    private Set<UserDto> dislikedByUsers;
 }

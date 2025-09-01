@@ -30,14 +30,15 @@ public class GameController {
 
     @GetMapping("/{id}")
     public ResponseEntity<GameDto> getGameById(@PathVariable UUID id) {
+        log.info("Request for game with ID: {}", id);
         try {
             GameDto gameDto = gameService.getGameById(id);
             log.info("Returning game: ID={}, Name={}, Images count={}",
-                    id, gameDto.getName(),
+                    gameDto.getId(), gameDto.getName(),
                     gameDto.getImages() != null ? gameDto.getImages().size() : 0);
             return ResponseEntity.ok(gameDto);
         } catch (RuntimeException e) {
-            log.error("Game not found: {}", id, e);
+            log.error("Game not found with ID: {}", id, e);
             return ResponseEntity.notFound().build();
         }
     }

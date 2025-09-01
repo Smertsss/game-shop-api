@@ -9,6 +9,7 @@ export interface Game {
   cost: number;
   creationDate: Date;
   updateDate: Date;
+  images?: string[];
 
   users?: User[];
   likedByUsers?: User[];

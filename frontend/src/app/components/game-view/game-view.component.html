@@ -1,0 +1,96 @@
+<div class="game-container" *ngIf="!loading; else loadingTemplate">
+  <div class="game-content" *ngIf="game && game.id; else errorTemplate">
+    <!-- Заголовок и рейтинг -->
+    <div class="game-header">
+      <div class="title-section">
+        <h1 class="game-title">{{ safeGet(game.name, 'Название игры') }}</h1>
+        <div class="rating">
+          <div class="stars">
+            <span *ngFor="let star of getStarsArray()" class="star">
+              <span *ngIf="star === 1">★</span>
+              <span *ngIf="star === 0.5">½</span>
+              <span *ngIf="star === 0">☆</span>
+            </span>
+          </div>
+          <span class="rating-value">{{ calculateRating() | number:'1.1-1' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-main">
+      <div class="images-section" *ngIf="hasImages()">
+        <div class="main-image">
+          <img
+            [src]="getCurrentImageUrl()"
+            [alt]="safeGet(game.name, 'Изображение игры')"
+            class="main-img"
+          >
+        </div>
+
+        <div class="thumbnails" *ngIf="game.images && game.images.length > 1">
+          <div
+            *ngFor="let image of game.images; let i = index"
+            class="thumbnail"
+            [class.active]="i === currentImageIndex"
+            (click)="changeImage(i)"
+          >
+            <img
+              [src]="getImageUrl(image)"
+              [alt]="'Thumbnail ' + (i + 1)"
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <div class="price-section">
+          <h2 class="price">{{ safeGet(game.cost, 0) | currency:'RUB ':'symbol':'1.0-0' }}</h2>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-primary">Купить сейчас</button>
+          <button class="btn btn-secondary">Добавить в корзину</button>
+          <button class="btn btn-secondary">В список желаемого</button>
+        </div>
+
+        <div class="share-report">
+          <button class="btn-link">Поделиться</button>
+          <button class="btn-link">Пожаловаться</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-images-message" *ngIf="!hasImages()">
+      <p>Изображения для этой игры отсутствуют</p>
+    </div>
+
+    <div class="game-details">
+      <div class="description">
+        <h3>Описание</h3>
+        <p>{{ safeGet(game.context, 'Описание игры отсутствует.') }}</p>
+      </div>
+
+      <div class="genres" *ngIf="game.genres && game.genres.length > 0">
+        <h3>Жанры</h3>
+        <div class="genre-tags">
+          <span class="genre-tag" *ngFor="let genre of game.genres">
+            {{ genre.name }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #errorTemplate>
+    <div class="error-message">
+      <p>{{ error || 'Игра не найдена' }}</p>
+      <button class="btn btn-primary" routerLink="/games">Вернуться к списку игр</button>
+    </div>
+  </ng-template>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="loading-message">
+    <p>Загрузка информации об игре...</p>
+  </div>
+</ng-template>

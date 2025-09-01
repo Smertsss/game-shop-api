@@ -13,6 +13,24 @@
   padding-right: 3rem;
 }
 
+.navbar-data-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 5000px;
+  margin: 0 auto;
+  padding-right: 3rem;
+}
+
+.navbar-data-container .navbar-links{
+  background: #3394BE;
+  padding: 0 4rem 0 1rem;
+  display: flex;
+  justify-content: left;
+  text-transform: uppercase;
+  gap: 0;
+}
+
 .navbar-links {
   background: #1B1B1B;
   padding: 0 4rem 0 1rem;
