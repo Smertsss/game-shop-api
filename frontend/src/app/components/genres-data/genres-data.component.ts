@@ -57,7 +57,7 @@ export class GenresDataComponent {
 
     onDelete(genreID: string) {
       if (confirm('Вы уверены, что хотите удалить это жанр?')) {
-        this.dataService.deleteUser(genreID).subscribe({
+        this.dataService.deleteGenre(genreID).subscribe({
           next: () => {
             this.loadGenres();
           },

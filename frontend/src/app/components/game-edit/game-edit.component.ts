@@ -147,7 +147,6 @@ export class GameEditComponent implements OnInit {
         this.isLoading = true;
         this.gameService.deleteGameImage(this.gameId, imageName).subscribe({
           next: () => {
-            // Обновляем локальный список изображений
             this.game.images = this.game.images.filter((img: string) => img !== imageName);
             this.isLoading = false;
           },
@@ -214,7 +213,7 @@ export class GameEditComponent implements OnInit {
 
     this.gameService.updateGame(this.gameId, updateData).subscribe({
       next: () => {
-        this.router.navigate(['/games']);
+        this.router.navigate(['/games-data']);
       },
       error: (error) => {
         this.error = 'Ошибка сохранения: ' + (error.error?.message || error.message || 'Неизвестная ошибка');
@@ -225,7 +224,7 @@ export class GameEditComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['/games']);
+    this.router.navigate(['/games-data']);
   }
 
   getImageUrl(imageName: string): string {
@@ -247,7 +246,6 @@ export class GameEditComponent implements OnInit {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
-  // Безопасный доступ к свойствам (как в game-view)
   safeGet<T>(value: T | undefined | null, defaultValue: T): T {
     return value !== undefined && value !== null ? value : defaultValue;
   }

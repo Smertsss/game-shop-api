@@ -2,7 +2,7 @@
   <h1>Таблица Пользователей</h1>
 
   <div *ngIf="isLoading" class="loading">
-    Loading games data...
+    Loading users data...
   </div>
 
   <div *ngIf="error" class="error">
@@ -12,6 +12,9 @@
   <app-data-table
     *ngIf="!isLoading && !error"
     [data]="usersData"
-    [columns]="columns">
+    [columns]="columns"
+    [showActions]="true"
+    (edit)="onEdit($event)"
+    (delete)="onDelete($event)">
   </app-data-table>
 </div>

@@ -12,6 +12,9 @@
   <app-data-table
     *ngIf="!isLoading && !error"
     [data]="companiesData"
-    [columns]="columns">
+    [columns]="columns"
+    [showActions]="true"
+    (edit)="onEdit($event)"
+    (delete)="onDelete($event)">
   </app-data-table>
 </div>

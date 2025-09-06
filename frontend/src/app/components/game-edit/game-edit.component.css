@@ -74,7 +74,7 @@
 
 .form-actions {
   display: flex;
-  gap: 10px;
+  gap: 10%;
 }
 
 .form-actions button {
@@ -85,11 +85,13 @@
 }
 
 .form-actions button[type="submit"] {
+  width: 45%;
   background: #007bff;
   color: white;
 }
 
 .form-actions button[type="button"] {
+  width: 45%;
   background: #6c757d;
   color: white;
 }

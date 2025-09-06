@@ -40,7 +40,7 @@ export class CompaniesDataComponent {
           ...company,
           creationDate: new Date(company.creationDate).toLocaleDateString(),
           users: company.users?.toString() || '0',
-          games: company.companies?.toString() || '0',
+          games: company.games?.toString() || '0',
           images: company.images?.toString() || '0'
         }));
         this.isLoading = false;
@@ -55,7 +55,7 @@ export class CompaniesDataComponent {
   }
 
   onEdit(companyID: string) {
-    this.router.navigate(['/games/edit', companyID]);
+    this.router.navigate(['/companies/edit', companyID]);
   }
 
   onDelete(companyID: string) {
